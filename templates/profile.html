@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profile - MovieRecommender</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            min-height: 100vh;
+
+            font-family: "Inter", sans-serif;
+
+            color: #f8fafc;
+
+            background: #030712;
+        }
+
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* ==================================================
+           NAVBAR
+        ================================================== */
+
+        .navbar {
+            height: 73px;
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 18px;
+
+            background: #050914;
+
+            border-bottom: 1px solid #1c2638;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+        }
+
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .brand-logo {
+            width: 52px;
+            height: 52px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 15px rgba(124, 58, 237, 0.35);
+        }
+
+
+        .brand-text {
+            font-family: "Poppins", sans-serif;
+
+            font-size: 19px;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+
+        .movie-text {
+            color: #ffffff;
+        }
+
+
+        .recommender-text {
+            background:
+                linear-gradient(
+                    90deg,
+                    #8b5cf6,
+                    #c084fc
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .nav-center {
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 38px;
+        }
+
+
+        .nav-center a {
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+
+            position: relative;
+
+            color: #e5e7eb;
+
+            font-size: 15px;
+
+            font-weight: 500;
+
+            transition: 0.2s ease;
+        }
+
+
+        .nav-center a:hover {
+            color: #a855f7;
+        }
+
+
+        .nav-center a.active {
+            color: #a855f7;
+        }
+
+
+        .nav-center a.active::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            right: 0;
+
+            bottom: -1px;
+
+            height: 4px;
+
+            border-radius: 4px 4px 0 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #7c3aed,
+                    #a855f7
+                );
+        }
+
+
+        /* ==================================================
+           NAV RIGHT
+        ================================================== */
+
+        .nav-right {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .welcome-text {
+            color: #f1f5f9;
+
+            font-size: 14px;
+
+            white-space: nowrap;
+        }
+
+
+        .profile-btn {
+            min-width: 81px;
+
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 0 14px;
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #8b5cf6
+                );
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .logout-btn {
+            min-width: 82px;
+
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 0 14px;
+
+            border-radius: 8px;
+
+            color: #fca5a5;
+
+            border: 1px solid #7f1d35;
+
+            background: transparent;
+
+            font-size: 14px;
+
+            font-weight: 500;
+
+            transition: 0.2s ease;
+        }
+
+
+        .logout-btn:hover {
+            background: rgba(127, 29, 53, 0.15);
+        }
+
+
+        /* ==================================================
+           PAGE
+        ================================================== */
+
+        .page {
+            width: min(1050px, 92%);
+
+            margin: 45px auto 70px;
+        }
+
+
+        .page-title {
+            font-family: "Poppins", sans-serif;
+
+            font-size: 32px;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+
+        .page-subtitle {
+            color: #94a3b8;
+
+            font-size: 14px;
+
+            margin-bottom: 28px;
+        }
+
+
+        /* ==================================================
+           PROFILE CARD
+        ================================================== */
+
+        .profile-card {
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            border: 1px solid #1e293b;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0c1425,
+                    #070d1b
+                );
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+
+        .profile-header {
+            padding: 32px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124, 58, 237, 0.16),
+                    rgba(37, 99, 235, 0.08)
+                );
+
+            border-bottom: 1px solid #1e293b;
+        }
+
+
+        .avatar {
+            width: 82px;
+
+            height: 82px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 30px
+                rgba(124, 58, 237, 0.28);
+        }
+
+
+        .profile-header h2 {
+            margin-bottom: 6px;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 23px;
+
+            font-weight: 700;
+        }
+
+
+        .profile-header p {
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+
+        /* ==================================================
+           PROFILE BODY
+        ================================================== */
+
+        .profile-body {
+            padding: 30px;
+        }
+
+
+        .section-title {
+            margin-bottom: 18px;
+
+            color: #f8fafc;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 17px;
+
+            font-weight: 700;
+        }
+
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+
+        .info-box {
+            padding: 19px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            border: 1px solid
+                rgba(148, 163, 184, 0.10);
+        }
+
+
+        .info-label {
+            margin-bottom: 8px;
+
+            color: #64748b;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+        }
+
+
+        .info-value {
+            color: #f1f5f9;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            word-break: break-word;
+        }
+
+
+        /* ==================================================
+           ACTIONS
+        ================================================== */
+
+        .profile-actions {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 28px;
+
+            padding-top: 24px;
+
+            border-top: 1px solid #1e293b;
+        }
+
+
+        .action-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 42px;
+
+            padding: 0 18px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+
+        .primary-btn {
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+        }
+
+
+        .primary-btn:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(124, 58, 237, 0.25);
+        }
+
+
+        .secondary-btn {
+            color: #cbd5e1;
+
+            background: #0b1220;
+
+            border: 1px solid #334155;
+        }
+
+
+        .secondary-btn:hover {
+            color: #ffffff;
+
+            border-color: #7c3aed;
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+        @media (max-width: 1000px) {
+
+            .nav-center {
+                gap: 20px;
+            }
+
+            .nav-center a {
+                font-size: 13px;
+            }
+
+            .welcome-text {
+                display: none;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .nav-center {
+                display: none;
+            }
+
+            .page {
+                width: 94%;
+
+                margin-top: 30px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                padding: 24px;
+            }
+
+            .profile-body {
+                padding: 24px;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         NAVBAR
+    ================================================== -->
+
+    <nav class="navbar">
+
+
+        <!-- LOGO -->
+
+        <div class="navbar-brand">
+
+            <a href="/" class="brand-link">
+
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    alt="MovieRecommender"
+                    class="brand-logo"
+                >
+
+                <span class="brand-text">
+
+                    <span class="movie-text">
+                        Movie
+                    </span><span class="recommender-text">
+                        Recommender
+                    </span>
+
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <!-- CENTER NAVIGATION -->
+
+        <div class="nav-center">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/movies">
+                Movies
+            </a>
+
+            <a href="/ai-assistant">
+                AI Assistant
+            </a>
+
+            <a href="/student-mode">
+                Student Mode
+            </a>
+
+            <a href="/discussion">
+                Discussion
+            </a>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="nav-right">
+
+
+            {% if session.get('user_logged_in') %}
+
+                <span class="welcome-text">
+
+                    Hi,
+                    {{ user["name"] }}
+
+                </span>
+
+
+                <a
+                    href="/profile"
+                    class="profile-btn"
+                >
+                    👤 Profile
+                </a>
+
+
+                <a
+                    href="/logout"
+                    class="logout-btn"
+                >
+                    Logout
+                </a>
+
+
+            {% else %}
+
+                <a
+                    href="/login"
+                    class="profile-btn"
+                >
+                    Login
+                </a>
+
+
+                <a
+                    href="/register"
+                    class="logout-btn"
+                >
+                    Register
+                </a>
+
+            {% endif %}
+
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- ==================================================
+         PROFILE PAGE
+    ================================================== -->
+
+    <main class="page">
+
+
+        <h1 class="page-title">
+            My Profile
+        </h1>
+
+
+        <p class="page-subtitle">
+            View your MovieRecommender account information.
+        </p>
+
+
+
+        <section class="profile-card">
+
+
+            <!-- PROFILE HEADER -->
+
+            <div class="profile-header">
+
+
+                <div class="avatar">
+
+                    {% if user["name"] %}
+
+                        {{ user["name"][0]|upper }}
+
+                    {% else %}
+
+                        U
+
+                    {% endif %}
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        {{ user["name"] }}
+                    </h2>
+
+                    <p>
+                        MovieRecommender Member
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- PROFILE INFORMATION -->
+
+            <div class="profile-body">
+
+
+                <div class="section-title">
+                    Account Information
+                </div>
+
+
+                <div class="info-grid">
+
+
+                    <!-- NAME -->
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            Full Name
+                        </div>
+
+                        <div class="info-value">
+                            {{ user["name"] }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            Email Address
+                        </div>
+
+                        <div class="info-value">
+                            {{ user["email"] }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- USER ID -->
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            User ID
+                        </div>
+
+                        <div class="info-value">
+                            {{ user["id"] }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- CREATED DATE -->
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            Member Since
+                        </div>
+
+                        <div class="info-value">
+                            {{ user["created_at"] }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            Account Status
+                        </div>
+
+                        <div class="info-value">
+                            Active
+                        </div>
+
+                    </div>
+
+
+                    <!-- MODE -->
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            Learning Mode
+                        </div>
+
+                        <div class="info-value">
+                            Student Mode Available
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="profile-actions">
+
+
+                    <a
+                        href="/student-mode"
+                        class="action-btn primary-btn"
+                    >
+                        🎓 Student Mode
+                    </a>
+
+
+                    <a
+                        href="/movies"
+                        class="action-btn secondary-btn"
+                    >
+                        🎬 Explore Movies
+                    </a>
+
+
+                    <a
+                        href="/logout"
+                        class="action-btn secondary-btn"
+                    >
+                        Logout
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+</body>
+
+</html>

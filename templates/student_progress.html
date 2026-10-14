@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Progress - Student Mode</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #020814;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 66px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            background: #050b18;
+            border-bottom: 1px solid #17243a;
+        }
+
+        .logo {
+            width: 250px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-title {
+            font-size: 17px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .logo-title span {
+            color: #9b52ff;
+        }
+
+        .nav-links {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: #d5d9e2;
+            font-size: 14px;
+            padding: 24px 0;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #9b52ff;
+        }
+
+        .nav-links .active {
+            color: #9b52ff;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-user {
+            color: #d5d9e2;
+            font-size: 13px;
+        }
+
+        .profile-btn,
+        .login-btn {
+            background: #7949e8;
+            color: #ffffff;
+            padding: 9px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .register-btn {
+            color: #ffffff;
+            border: 1px solid #7949e8;
+            padding: 8px 17px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .logout-btn {
+            color: #ff9aa8;
+            border: 1px solid #71303d;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        /* ================= PAGE ================= */
+
+        .page {
+            width: 100%;
+            max-width: 1250px;
+            margin: auto;
+            padding: 30px 20px 70px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #a96cff;
+            font-size: 12px;
+            margin-bottom: 18px;
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            background:
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(130, 75, 240, 0.24),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #0b1830
+                );
+
+            border: 1px solid #263650;
+            border-radius: 10px;
+            padding: 35px 25px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .hero-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7547d9,
+                    #9b52ff
+                );
+
+            font-size: 34px;
+        }
+
+        .hero h1 {
+            font-size: 29px;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: #9b52ff;
+        }
+
+        .hero p {
+            color: #aeb8c9;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ================= OVERVIEW ================= */
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #09162a
+                );
+
+            border: 1px solid #1b2b40;
+            border-radius: 9px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #8793a6;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ================= MAIN GRID ================= */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .card {
+            background:
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #09162a
+                );
+
+            border: 1px solid #1b2b40;
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            color: #8793a6;
+            font-size: 11px;
+            margin-bottom: 20px;
+        }
+
+        /* ================= OVERALL PROGRESS ================= */
+
+        .progress-box {
+            background: #050d1a;
+            border: 1px solid #1b2b40;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .progress-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .progress-percent {
+            color: #b77aff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 9px;
+            border-radius: 10px;
+            background: #17243a;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #7547d9,
+                    #9b52ff
+                );
+
+            transition: width 0.5s ease;
+        }
+
+        .progress-message {
+            margin-top: 10px;
+            color: #8793a6;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= TOPICS ================= */
+
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .topic-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 14px;
+            background: #050d1a;
+            border: 1px solid #17243a;
+            border-radius: 7px;
+        }
+
+        .topic-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .topic-icon {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 7px;
+            background: rgba(125, 70, 220, 0.12);
+            border: 1px solid #34255d;
+            font-size: 17px;
+        }
+
+        .topic-name {
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .topic-date {
+            color: #68758a;
+            font-size: 9px;
+        }
+
+        .status {
+            flex-shrink: 0;
+            padding: 6px 9px;
+            border-radius: 5px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .status-complete {
+            color: #6cffb1;
+            background: rgba(40, 200, 120, 0.09);
+            border: 1px solid rgba(40, 200, 120, 0.25);
+        }
+
+        .status-pending {
+            color: #9da8ba;
+            background: #0c1526;
+            border: 1px solid #263650;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .side-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #09162a
+                );
+
+            border: 1px solid #1b2b40;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .side-card h3 {
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+        .side-link {
+            display: block;
+            padding: 10px;
+            margin-bottom: 7px;
+            border-radius: 6px;
+            background: #050d1a;
+            border: 1px solid #17243a;
+            color: #aeb8c9;
+            font-size: 10px;
+            transition: 0.2s;
+        }
+
+        .side-link:hover {
+            color: #ffffff;
+            border-color: #8952ed;
+        }
+
+        .side-link.active {
+            color: #ffffff;
+            border-color: #8952ed;
+            background: rgba(125, 70, 220, 0.12);
+        }
+
+        /* ================= ACHIEVEMENT ================= */
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 11px 0;
+            border-bottom: 1px solid #17243a;
+        }
+
+        .achievement:last-child {
+            border-bottom: 0;
+        }
+
+        .achievement-icon {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #101a30;
+            font-size: 15px;
+        }
+
+        .achievement-text strong {
+            display: block;
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+
+        .achievement-text span {
+            color: #68758a;
+            font-size: 9px;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            padding: 35px 20px;
+            text-align: center;
+            background: #050d1a;
+            border: 1px solid #17243a;
+            border-radius: 8px;
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .empty h3 {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .empty p {
+            color: #8793a6;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .start-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7547d9,
+                    #9b52ff
+                );
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            color: #58667a;
+            font-size: 10px;
+            padding: 15px 0 25px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 900px) {
+
+            .logo {
+                width: auto;
+                flex: 1;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width: 650px) {
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topic-row {
+                align-items: flex-start;
+            }
+
+            .topic-left {
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender"
+            >
+
+        </div>
+
+        <div class="logo-title">
+            Movie<span>Recommender</span>
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/movies">
+            Movies
+        </a>
+
+        <a href="/ai-assistant">
+            AI Assistant
+        </a>
+
+        <a
+            href="/student-mode"
+            class="active"
+        >
+            Student Mode
+        </a>
+
+        <a href="/discussion">
+            Discussion
+        </a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        {% if user_logged_in %}
+
+            <span class="welcome-user">
+                Hi, {{ user_name }}
+            </span>
+
+            <a
+                href="/profile"
+                class="profile-btn"
+            >
+                Profile
+            </a>
+
+            <a
+                href="/logout"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        {% else %}
+
+            <a
+                href="/login"
+                class="login-btn"
+            >
+                Login
+            </a>
+
+            <a
+                href="/register"
+                class="register-btn"
+            >
+                Register
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- ================= PAGE ================= -->
+
+<main class="page">
+
+    <a
+        href="/student-mode"
+        class="back-link"
+    >
+        ← Back to Student Mode
+    </a>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-icon">
+            📊
+        </div>
+
+        <h1>
+            My <span>Learning Progress</span>
+        </h1>
+
+        <p>
+            Track your completed learning modules and
+            continue improving your movie-based knowledge.
+        </p>
+
+    </section>
+
+
+    <!-- ================= STAT CARDS ================= -->
+
+    <section class="overview-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <div class="stat-number">
+                {{ completed|default(0) }}
+            </div>
+
+            <div class="stat-label">
+                Completed Modules
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📖
+            </div>
+
+            <div class="stat-number">
+                {{ total|default(0) }}
+            </div>
+
+            <div class="stat-label">
+                Total Modules
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <div class="stat-number">
+                {{ percent|default(0) }}%
+            </div>
+
+            <div class="stat-label">
+                Overall Progress
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MAIN GRID ================= -->
+
+    <div class="main-grid">
+
+
+        <!-- ================= LEFT ================= -->
+
+        <div>
+
+            <!-- OVERALL PROGRESS -->
+
+            <section class="card">
+
+                <h2 class="card-title">
+                    Overall Progress
+                </h2>
+
+                <p class="card-subtitle">
+                    Your progress across Student Mode learning modules.
+                </p>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-top">
+
+                        <span class="progress-name">
+                            Learning Completion
+                        </span>
+
+                        <span class="progress-percent">
+                            {{ percent|default(0) }}%
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill"
+                            id="overallProgressFill"
+                            data-progress="{{ percent|default(0)|int }}"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="progress-message">
+
+                        {% if percent|default(0) >= 100 %}
+
+                            🎉 Excellent! You have completed
+                            all available learning modules.
+
+                        {% elif percent|default(0) > 0 %}
+
+                            👍 Good progress! Continue exploring
+                            the remaining learning modules.
+
+                        {% else %}
+
+                            Start a learning module to begin
+                            tracking your progress.
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- MODULE HISTORY -->
+
+            <section class="card">
+
+                <h2 class="card-title">
+                    Learning Module Progress
+                </h2>
+
+                <p class="card-subtitle">
+                    Your completed and pending Student Mode topics.
+                </p>
+
+
+                {% if progress_rows %}
+
+                    <div class="topic-list">
+
+                        {% for row in progress_rows %}
+
+                            <div class="topic-row">
+
+                                <div class="topic-left">
+
+                                    <div class="topic-icon">
+
+                                        {% if row["completed"] %}
+                                            ✓
+                                        {% else %}
+                                            📚
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="topic-name">
+                                            {{ row["topic"]|replace("-", " ")|title }}
+                                        </div>
+
+
+                                        {% if row["updated_at"] %}
+
+                                            <div class="topic-date">
+                                                Updated:
+                                                {{ row["updated_at"] }}
+                                            </div>
+
+                                        {% else %}
+
+                                            <div class="topic-date">
+                                                Learning module
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+
+                                {% if row["completed"] %}
+
+                                    <span class="status status-complete">
+                                        ✓ Completed
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status status-pending">
+                                        In Progress
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            📚
+                        </div>
+
+                        <h3>
+                            No Progress Yet
+                        </h3>
+
+                        <p>
+                            You haven't completed any learning
+                            modules yet. Choose a movie and start
+                            learning to build your progress.
+                        </p>
+
+
+                        <a
+                            href="/student-mode"
+                            class="start-button"
+                        >
+                            Start Learning
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </div>
+
+
+        <!-- ================= RIGHT SIDEBAR ================= -->
+
+        <aside>
+
+
+            <!-- STUDENT MENU -->
+
+            <section class="side-card">
+
+                <h3>
+                    🎓 Student Mode
+                </h3>
+
+
+                <a
+                    href="/student-mode"
+                    class="side-link"
+                >
+                    🏠 Dashboard
+                </a>
+
+
+                <a
+                    href="/student-learning"
+                    class="side-link"
+                >
+                    📚 My Learning
+                </a>
+
+
+                <a
+                    href="/student-quizzes"
+                    class="side-link"
+                >
+                    📝 Quizzes
+                </a>
+
+
+                <a
+                    href="/student-progress"
+                    class="side-link active"
+                >
+                    📊 Progress
+                </a>
+
+            </section>
+
+
+            <!-- ACHIEVEMENTS -->
+
+            <section class="side-card">
+
+                <h3>
+                    🏆 Achievements
+                </h3>
+
+
+                <div class="achievement">
+
+                    <div class="achievement-icon">
+                        📚
+                    </div>
+
+                    <div class="achievement-text">
+
+                        <strong>
+                            First Lesson
+                        </strong>
+
+                        <span>
+                            Complete your first module
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="achievement">
+
+                    <div class="achievement-icon">
+                        🧠
+                    </div>
+
+                    <div class="achievement-text">
+
+                        <strong>
+                            Quiz Explorer
+                        </strong>
+
+                        <span>
+                            Complete a movie quiz
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="achievement">
+
+                    <div class="achievement-icon">
+                        🎯
+                    </div>
+
+                    <div class="achievement-text">
+
+                        <strong>
+                            Learning Goal
+                        </strong>
+
+                        <span>
+                            Complete multiple modules
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUICK LEARNING -->
+
+            <section class="side-card">
+
+                <h3>
+                    ⚡ Quick Learning
+                </h3>
+
+
+                {% if featured_movie %}
+
+                    <a
+                        href="/student-topic?movie={{ featured_movie.title|urlencode }}&topic=scientific-concepts"
+                        class="side-link"
+                    >
+                        🔬 Scientific Concepts
+                    </a>
+
+
+                    <a
+                        href="/student-topic?movie={{ featured_movie.title|urlencode }}&topic=what-can-we-learn"
+                        class="side-link"
+                    >
+                        💡 What Can We Learn?
+                    </a>
+
+
+                    <a
+                        href="/student-topic?movie={{ featured_movie.title|urlencode }}&topic=character-analysis"
+                        class="side-link"
+                    >
+                        🎭 Characters & Themes
+                    </a>
+
+
+                    <a
+                        href="/student-topic?movie={{ featured_movie.title|urlencode }}&topic=real-world-connection"
+                        class="side-link"
+                    >
+                        🌍 Real World Connection
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="/student-mode"
+                        class="side-link"
+                    >
+                        🔎 Find a Movie
+                    </a>
+
+                {% endif %}
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+    Movie Recommendation System © 2026
+</footer>
+
+
+<!-- ================= PROGRESS SCRIPT ================= -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const progressFill =
+            document.getElementById("overallProgressFill");
+
+        if (progressFill) {
+
+            let value =
+                parseInt(
+                    progressFill.getAttribute("data-progress") || "0",
+                    10
+                );
+
+            if (isNaN(value)) {
+                value = 0;
+            }
+
+            value = Math.max(0, Math.min(100, value));
+
+            progressFill.style.width = value + "%";
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>

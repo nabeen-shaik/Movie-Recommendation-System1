@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Datasets Management</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 257px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #4f46e5;
+            padding: 0 14px 30px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            margin: 20px 14px 10px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            margin: 4px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+
+        .menu a.active {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .menu-icon {
+            width: 25px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 257px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+        }
+
+        .topbar h1 {
+            font-size: 22px;
+            color: #111827;
+        }
+
+        .admin-info {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .content {
+            padding: 35px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* ================= DATASET CARD ================= */
+
+        .dataset-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .dataset-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 18px;
+        }
+
+        .dataset-path {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 13px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 18px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status.active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        /* ================= COLUMNS ================= */
+
+        .columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .column {
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 25px;
+            overflow: hidden;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #111827;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 12px;
+            padding: 13px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #475569;
+            max-width: 280px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        tr:hover td {
+            background: #fafafa;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #64748b;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎬 MovieRecommender
+        </div>
+
+
+        <div class="menu">
+
+            <a href="{{ url_for('admin_dashboard') }}">
+                <div class="menu-icon">🏠</div>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="{{ url_for('admin_movies') }}">
+                <div class="menu-icon">🎬</div>
+                <span>Movies</span>
+            </a>
+
+
+            <a href="{{ url_for('admin_users') }}">
+                <div class="menu-icon">👥</div>
+                <span>Users</span>
+            </a>
+
+
+            <a href="{{ url_for('admin_ratings') }}">
+                <div class="menu-icon">⭐</div>
+                <span>Ratings</span>
+            </a>
+
+
+            <a href="{{ url_for('admin_discussions') }}">
+                <div class="menu-icon">💬</div>
+                <span>Discussions</span>
+            </a>
+
+
+            <div class="menu-title">
+                MANAGEMENT
+            </div>
+
+
+            <a href="{{ url_for('admin_datasets') }}"
+               class="active">
+
+                <div class="menu-icon">
+                    🗂️
+                </div>
+
+                <span>
+                    Datasets
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_ai_features') }}">
+                <div class="menu-icon">🤖</div>
+                <span>AI Features</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <header class="topbar">
+
+            <h1>
+                Datasets Management
+            </h1>
+
+            <div class="admin-info">
+                Administrator
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+
+            {% if dataset_exists %}
+
+
+                <!-- ================= STATS ================= -->
+
+                <div class="stats">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Total Movies
+                        </div>
+
+                        <div class="stat-value">
+                            {{ total_rows }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Total Columns
+                        </div>
+
+                        <div class="stat-value">
+                            {{ total_columns }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Dataset Size
+                        </div>
+
+                        <div class="stat-value">
+                            {{ file_size }} MB
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= DATASET INFO ================= -->
+
+                <div class="dataset-card">
+
+                    <div class="dataset-title">
+                        📊 Movie Dataset
+                    </div>
+
+
+                    <div class="dataset-path">
+                        {{ dataset_path }}
+                    </div>
+
+
+                    <span class="status active">
+                        ● Dataset Loaded
+                    </span>
+
+                </div>
+
+
+                <!-- ================= COLUMNS ================= -->
+
+                <div class="dataset-card">
+
+                    <div class="dataset-title">
+                        Dataset Columns
+                    </div>
+
+
+                    <div class="columns">
+
+                        {% for column in columns %}
+
+                            <div class="column">
+                                {{ column }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= PREVIEW ================= -->
+
+                <div class="table-card">
+
+                    <div class="table-title">
+
+                        Dataset Preview
+
+                        <span
+                            style="
+                                font-size:12px;
+                                color:#94a3b8;
+                                font-weight:normal;
+                                margin-left:8px;
+                            "
+                        >
+                            First 10 records
+                        </span>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+
+                            <thead>
+
+                                <tr>
+
+                                    {% for column in columns %}
+
+                                        <th>
+                                            {{ column }}
+                                        </th>
+
+                                    {% endfor %}
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for row in preview %}
+
+                                    <tr>
+
+                                        {% for column in columns %}
+
+                                            <td
+                                                title="{{ row[column] }}"
+                                            >
+                                                {{ row[column] }}
+                                            </td>
+
+                                        {% endfor %}
+
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- ================= EMPTY ================= -->
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        🗂️
+                    </div>
+
+                    <h3>
+                        Dataset Not Found
+                    </h3>
+
+                    <p>
+                        Please check the datasets folder.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+    </main>
+
+
+</body>
+
+</html>

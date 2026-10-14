@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ topic.title if topic else "Learning Module" }}
+        - Student Mode
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #020814;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 66px;
+            width: 100%;
+            background: #050b18;
+            border-bottom: 1px solid #17243a;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 24px;
+        }
+
+        .logo {
+            width: 250px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+        .logo-title {
+            font-size: 17px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .logo-title span {
+            color: #9b52ff;
+        }
+
+        .nav-links {
+            flex: 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: #d5d9e2;
+
+            font-size: 14px;
+
+            padding: 24px 0;
+
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #9b52ff;
+        }
+
+        .active-nav {
+            color: #9b52ff !important;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .welcome-user {
+            color: #d5d9e2;
+            font-size: 13px;
+        }
+
+        .profile-btn {
+            background: #7949e8;
+            color: #ffffff;
+
+            border-radius: 6px;
+
+            padding: 9px 20px;
+
+            font-size: 13px;
+        }
+
+        .login-btn {
+            background: #7949e8;
+            color: #ffffff;
+
+            border-radius: 6px;
+
+            padding: 9px 20px;
+
+            font-size: 13px;
+        }
+
+        .register-btn {
+            color: #ffffff;
+
+            border: 1px solid #7949e8;
+
+            padding: 8px 17px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+        }
+
+        .logout-btn {
+            color: #ff9aa8;
+
+            border: 1px solid #71303d;
+
+            padding: 8px 14px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+        }
+
+        /* ================= PAGE ================= */
+
+        .page {
+            width: 100%;
+
+            max-width: 1250px;
+
+            margin: auto;
+
+            padding: 30px 20px 70px;
+        }
+
+        /* ================= BACK ================= */
+
+        .back-link {
+            display: inline-block;
+
+            color: #a96cff;
+
+            font-size: 12px;
+
+            margin-bottom: 18px;
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+        }
+
+        /* ================= TOPIC HERO ================= */
+
+        .topic-hero {
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(130, 75, 240, 0.24),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #0b1830
+                );
+
+            border: 1px solid #263650;
+
+            border-radius: 10px;
+
+            padding: 34px 28px;
+
+            text-align: center;
+
+            margin-bottom: 20px;
+        }
+
+        .topic-icon {
+            width: 76px;
+            height: 76px;
+
+            margin: 0 auto 16px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7547d9,
+                    #9b52ff
+                );
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 38px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(130, 70, 240, 0.25);
+        }
+
+        .topic-hero h1 {
+            font-size: 28px;
+
+            margin-bottom: 10px;
+        }
+
+        .topic-hero p {
+            max-width: 800px;
+
+            margin: auto;
+
+            color: #aeb8c9;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        /* ================= MOVIE CARD ================= */
+
+        .movie-card {
+            display: flex;
+
+            gap: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #09162a
+                );
+
+            border: 1px solid #1b2b40;
+
+            border-radius: 10px;
+
+            padding: 18px;
+
+            margin-bottom: 20px;
+        }
+
+        .movie-poster {
+            width: 145px;
+            height: 205px;
+
+            flex-shrink: 0;
+
+            background: #050d1a;
+
+            border: 1px solid #263650;
+
+            border-radius: 7px;
+
+            overflow: hidden;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .poster-empty {
+            color: #68758a;
+
+            font-size: 11px;
+
+            text-align: center;
+
+            padding: 10px;
+        }
+
+        .movie-info {
+            flex: 1;
+
+            padding-top: 5px;
+        }
+
+        .movie-label {
+            display: inline-block;
+
+            color: #6cffb1;
+
+            background: rgba(25, 180, 110, 0.08);
+
+            border: 1px solid rgba(25, 180, 110, 0.30);
+
+            border-radius: 20px;
+
+            padding: 5px 10px;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            margin-bottom: 9px;
+        }
+
+        .movie-info h2 {
+            font-size: 23px;
+
+            margin-bottom: 10px;
+        }
+
+        .movie-meta {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin-bottom: 11px;
+        }
+
+        .meta-chip {
+            background: #0c1930;
+
+            border: 1px solid #263650;
+
+            border-radius: 5px;
+
+            padding: 5px 8px;
+
+            color: #bfc9d8;
+
+            font-size: 9px;
+        }
+
+        .rating-chip {
+            color: #ffd45c;
+        }
+
+        .movie-overview {
+            color: #9eabbe;
+
+            font-size: 11px;
+
+            line-height: 1.7;
+
+            max-width: 850px;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr)
+                290px;
+
+            gap: 18px;
+
+            align-items: start;
+        }
+
+        .content-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #09162a
+                );
+
+            border: 1px solid #1b2b40;
+
+            border-radius: 10px;
+
+            padding: 24px;
+        }
+
+        .content-card h2 {
+            font-size: 19px;
+
+            margin-bottom: 10px;
+        }
+
+        .content-card h3 {
+            color: #ffffff;
+
+            font-size: 14px;
+
+            margin-top: 22px;
+
+            margin-bottom: 8px;
+        }
+
+        .content-card p {
+            color: #aeb8c9;
+
+            font-size: 12px;
+
+            line-height: 1.8;
+
+            margin-bottom: 12px;
+        }
+
+        /* ================= LEARNING CONTENT ================= */
+
+        .learning-text {
+            background: #050d1a;
+
+            border: 1px solid #263650;
+
+            border-radius: 8px;
+
+            padding: 18px;
+
+            color: #cbd3df;
+
+            font-size: 12px;
+
+            line-height: 1.8;
+
+            white-space: pre-line;
+        }
+
+        .takeaway {
+            margin-top: 18px;
+
+            padding: 16px;
+
+            border-left: 3px solid #9b52ff;
+
+            background:
+                rgba(125, 70, 220, 0.08);
+
+            border-radius: 5px;
+        }
+
+        .takeaway strong {
+            color: #c28cff;
+
+            display: block;
+
+            margin-bottom: 6px;
+        }
+
+        .takeaway span {
+            color: #aeb8c9;
+
+            font-size: 11px;
+
+            line-height: 1.7;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .side-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    #071120,
+                    #09162a
+                );
+
+            border: 1px solid #1b2b40;
+
+            border-radius: 10px;
+
+            padding: 18px;
+
+            margin-bottom: 15px;
+        }
+
+        .side-card h3 {
+            font-size: 14px;
+
+            margin-bottom: 13px;
+        }
+
+        .side-item {
+            display: block;
+
+            color: #aeb8c9;
+
+            border: 1px solid #17243a;
+
+            background: #050d1a;
+
+            border-radius: 6px;
+
+            padding: 10px;
+
+            margin-bottom: 7px;
+
+            font-size: 10px;
+
+            transition: 0.2s;
+        }
+
+        .side-item:hover {
+            color: #ffffff;
+
+            border-color: #8952ed;
+
+            background: #0c1930;
+        }
+
+        .side-item.active {
+            color: #ffffff;
+
+            border-color: #8952ed;
+
+            background:
+                rgba(125, 70, 220, 0.12);
+        }
+
+        /* ================= COMPLETE ================= */
+
+        .complete-card {
+            margin-top: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #10172a,
+                    #0b1324
+                );
+
+            border: 1px solid #263650;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .complete-info h3 {
+            font-size: 15px;
+
+            margin-bottom: 6px;
+        }
+
+        .complete-info p {
+            color: #8793a6;
+
+            font-size: 10px;
+
+            line-height: 1.5;
+        }
+
+        .completed-badge {
+            display: inline-block;
+
+            background:
+                rgba(40, 200, 120, 0.10);
+
+            border: 1px solid
+                rgba(40, 200, 120, 0.35);
+
+            color: #6cffb1;
+
+            border-radius: 6px;
+
+            padding: 10px 15px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .complete-button {
+            border: 0;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7547d9,
+                    #9b52ff
+                );
+
+            color: #ffffff;
+
+            padding: 11px 18px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .complete-button:hover {
+            opacity: 0.9;
+        }
+
+        /* ================= RELATED MOVIE ACTIONS ================= */
+
+        .action-row {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+            margin-top: 18px;
+        }
+
+        .action-button {
+            display: inline-block;
+
+            padding: 9px 14px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            border: 1px solid #263650;
+
+            color: #cbd3df;
+
+            background: #0a1324;
+        }
+
+        .action-button:hover {
+            border-color: #8952ed;
+
+            color: #ffffff;
+        }
+
+        .action-primary {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7547d9,
+                    #9b52ff
+                );
+
+            border-color: transparent;
+
+            color: #ffffff;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+
+            color: #58667a;
+
+            font-size: 10px;
+
+            padding: 15px 0 25px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 900px) {
+
+            .logo {
+                width: auto;
+
+                flex: 1;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .navbar {
+                padding: 0 12px;
+            }
+
+            .page {
+                padding: 18px 10px 50px;
+            }
+
+            .topic-hero {
+                padding: 28px 15px;
+            }
+
+            .topic-hero h1 {
+                font-size: 23px;
+            }
+
+            .movie-card {
+                flex-direction: column;
+
+                align-items: center;
+
+                text-align: center;
+            }
+
+            .movie-meta {
+                justify-content: center;
+            }
+
+            .complete-card {
+                flex-direction: column;
+
+                align-items: stretch;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+
+    <div class="logo">
+
+        <div class="logo-icon">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender"
+            >
+
+        </div>
+
+        <div class="logo-title">
+            Movie<span>Recommender</span>
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/movies">
+            Movies
+        </a>
+
+        <a href="/ai-assistant">
+            AI Assistant
+        </a>
+
+        <a
+            href="/student-mode"
+            class="active-nav"
+        >
+            Student Mode
+        </a>
+
+        <a href="/discussion">
+            Discussion
+        </a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        {% if user_logged_in %}
+
+            <span class="welcome-user">
+                Hi, {{ user_name }}
+            </span>
+
+            <a
+                href="/profile"
+                class="profile-btn"
+            >
+                Profile
+            </a>
+
+            <a
+                href="/logout"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        {% else %}
+
+            <a
+                href="/login"
+                class="login-btn"
+            >
+                Login
+            </a>
+
+            <a
+                href="/register"
+                class="register-btn"
+            >
+                Register
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= PAGE ================= -->
+
+<main class="page">
+
+
+    <!-- BACK -->
+
+    <a
+        href="/student-mode"
+        class="back-link"
+    >
+        ← Back to Student Mode
+    </a>
+
+
+
+    <!-- ================= TOPIC HERO ================= -->
+
+    <section class="topic-hero">
+
+        <div class="topic-icon">
+
+            {% if topic and topic.icon %}
+                {{ topic.icon }}
+            {% else %}
+                📚
+            {% endif %}
+
+        </div>
+
+
+        <h1>
+
+            {% if topic %}
+                {{ topic.title }}
+            {% else %}
+                Learning Module
+            {% endif %}
+
+        </h1>
+
+
+        <p>
+
+            {% if topic and topic.description %}
+
+                {{ topic.description }}
+
+            {% else %}
+
+                Explore educational concepts and
+                learning ideas through movies.
+
+            {% endif %}
+
+        </p>
+
+    </section>
+
+
+
+    <!-- ================= SELECTED MOVIE ================= -->
+
+    {% if movie %}
+
+        <section class="movie-card">
+
+
+            <div class="movie-poster">
+
+                {% if movie.poster_url %}
+
+                    <img
+                        src="{{ movie.poster_url }}"
+                        alt="{{ movie.title }}"
+                    >
+
+                {% else %}
+
+                    <div class="poster-empty">
+
+                        🎬
+
+                        <br><br>
+
+                        Poster unavailable
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="movie-info">
+
+                <div class="movie-label">
+                    SELECTED LEARNING MOVIE
+                </div>
+
+
+                <h2>
+                    {{ movie.title }}
+                </h2>
+
+
+                <div class="movie-meta">
+
+
+                    {% if movie.rating %}
+
+                        <span class="meta-chip rating-chip">
+                            ⭐ {{ movie.rating }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if movie.year %}
+
+                        <span class="meta-chip">
+                            📅 {{ movie.year }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if movie.genres %}
+
+                        <span class="meta-chip">
+                            🎭 {{ movie.genres }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="movie-overview">
+
+                    {% if movie.overview %}
+
+                        {{ movie.overview }}
+
+                    {% else %}
+
+                        This movie can be explored through
+                        educational concepts, lessons,
+                        characters, themes and real-world
+                        connections.
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="action-row">
+
+                    <a
+                        href="/student-mode"
+                        class="action-button"
+                    >
+                        🔎 Find Another Movie
+                    </a>
+
+
+                    <a
+                        href="/student-quiz?movie={{ movie.title|urlencode }}"
+                        class="action-button action-primary"
+                    >
+                        🧠 Take Quiz
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% else %}
+
+        <section class="content-card">
+
+            <h2>
+                🎬 Movie Not Found
+            </h2>
+
+            <p>
+                Please return to Student Mode and select
+                a valid movie from the dataset.
+            </p>
+
+            <a
+                href="/student-mode"
+                class="action-button action-primary"
+            >
+                ← Back to Student Mode
+            </a>
+
+        </section>
+
+    {% endif %}
+
+
+
+    {% if movie %}
+
+    <!-- ================= CONTENT GRID ================= -->
+
+    <div class="content-grid">
+
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <section class="content-card">
+
+
+            <h2>
+
+                {% if topic and topic.icon %}
+                    {{ topic.icon }}
+                {% endif %}
+
+                {{ topic.title if topic else "Learning Content" }}
+
+            </h2>
+
+
+            <p>
+                Learn about
+                <strong>{{ movie.title }}</strong>
+                through this Student Mode module.
+            </p>
+
+
+
+            <!-- CONTENT -->
+
+            <div class="learning-text">
+
+                {% if topic and topic.content %}
+
+                    {{ topic.content|safe }}
+
+                {% else %}
+
+                    This learning module provides
+                    educational information related to
+                    the selected movie.
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- MOVIE BASED OBSERVATION -->
+
+            <h3>
+                🎬 Movie Connection
+            </h3>
+
+
+            <p>
+
+                The selected movie is
+                <strong>{{ movie.title }}</strong>.
+
+                {% if movie.genres %}
+                    It belongs to the
+                    {{ movie.genres }}
+                    genre category.
+                {% endif %}
+
+                Students can use the movie story and
+                available movie information to understand
+                the concepts discussed in this module.
+
+            </p>
+
+
+
+            {% if topic_name == "data-ml-concepts" %}
+
+                <h3>
+                    🔬 Key Concepts
+                </h3>
+
+                <p>
+                    This project uses a movie dataset,
+                    preprocessing, feature engineering,
+                    TF-IDF and Cosine Similarity.
+                    These concepts help convert movie
+                    information into features that can
+                    be compared by the recommendation engine.
+                </p>
+
+            {% elif topic_name == "project-learning" %}
+
+                <h3>
+                    📝 Project Workflow
+                </h3>
+
+                <p>
+                    User Input →
+                    Movie Search →
+                    Data Preprocessing →
+                    Feature Engineering →
+                    TF-IDF →
+                    Cosine Similarity →
+                    Recommendation Engine →
+                    Recommended Movies.
+                </p>
+
+            {% elif topic_name == "movie-analysis" %}
+
+                <h3>
+                    🎭 Analysis Points
+                </h3>
+
+                <p>
+                    Students can analyse the movie title,
+                    genre, rating, year, overview,
+                    characters and major themes.
+                    These elements help connect movie content
+                    with learning activities.
+                </p>
+
+            {% elif topic_name == "real-world-connection" %}
+
+                <h3>
+                    🌍 Real-World Application
+                </h3>
+
+                <p>
+                    Students can connect ideas from
+                    <strong>{{ movie.title }}</strong>
+                    with science, technology, education,
+                    teamwork, communication, problem solving
+                    and possible career-related situations.
+                </p>
+
+            {% endif %}
+
+
+
+            <!-- STUDENT TAKEAWAY -->
+
+            <div class="takeaway">
+
+                <strong>
+                    📚 Student Takeaway
+                </strong>
+
+                <span>
+
+                    Movies can be used as learning resources.
+                    Students can observe information from the
+                    movie, connect it with academic concepts,
+                    and apply those ideas to real-world
+                    situations.
+
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================= SIDE MODULES ================= -->
+
+        <aside>
+
+
+            <div class="side-card">
+
+                <h3>
+                    📚 Learning Modules
+                </h3>
+
+
+                <a
+                    href="/student-topic?movie={{ movie.title|urlencode }}&topic=scientific-concepts"
+                    class="side-item {% if topic_name == 'data-ml-concepts' %}active{% endif %}"
+                >
+                    🔬 Scientific Concepts
+                </a>
+
+
+                <a
+                    href="/student-topic?movie={{ movie.title|urlencode }}&topic=what-can-we-learn"
+                    class="side-item {% if topic_name == 'project-learning' %}active{% endif %}"
+                >
+                    💡 What Can We Learn?
+                </a>
+
+
+                <a
+                    href="/student-topic?movie={{ movie.title|urlencode }}&topic=character-analysis"
+                    class="side-item {% if topic_name == 'movie-analysis' %}active{% endif %}"
+                >
+                    🎭 Characters & Themes
+                </a>
+
+
+                <a
+                    href="/student-topic?movie={{ movie.title|urlencode }}&topic=real-world-connection"
+                    class="side-item {% if topic_name == 'real-world-connection' %}active{% endif %}"
+                >
+                    🌍 Real World Connection
+                </a>
+
+            </div>
+
+
+
+            <div class="side-card">
+
+                <h3>
+                    🧠 Quick Actions
+                </h3>
+
+
+                <a
+                    href="/student-quiz?movie={{ movie.title|urlencode }}"
+                    class="side-item"
+                >
+                    📝 Take Movie Quiz
+                </a>
+
+
+                <a
+                    href="/student-bookmarks?movie={{ movie.title|urlencode }}"
+                    class="side-item"
+                >
+                    🔖 Save Movie
+                </a>
+
+
+                <a
+                    href="/student-notes?movie={{ movie.title|urlencode }}"
+                    class="side-item"
+                >
+                    📝 My Notes
+                </a>
+
+
+                <a
+                    href="/student-progress"
+                    class="side-item"
+                >
+                    📊 View Progress
+                </a>
+
+            </div>
+
+        </aside>
+
+
+    </div>
+
+
+
+    <!-- ================= COMPLETE MODULE ================= -->
+
+    <section class="complete-card">
+
+
+        <div class="complete-info">
+
+            <h3>
+                {% if completed %}
+                    ✅ Module Completed
+                {% else %}
+                    Complete This Learning Module
+                {% endif %}
+            </h3>
+
+
+            <p>
+
+                {% if completed %}
+
+                    You have already completed this
+                    learning module.
+
+                {% else %}
+
+                    Finish studying this topic and mark
+                    it as completed to update your progress.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        {% if completed %}
+
+            <span class="completed-badge">
+                ✓ Completed
+            </span>
+
+        {% else %}
+
+            <form
+                method="POST"
+                action="/student-progress/complete"
+            >
+
+                <input
+                    type="hidden"
+                    name="topic"
+                    value="{{ topic_name }}"
+                >
+
+                <button
+                    type="submit"
+                    class="complete-button"
+                >
+                    ✓ Mark as Completed
+                </button>
+
+            </form>
+
+        {% endif %}
+
+
+    </section>
+
+    {% endif %}
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    Movie Recommendation System © 2026
+
+</footer>
+
+
+</body>
+</html>

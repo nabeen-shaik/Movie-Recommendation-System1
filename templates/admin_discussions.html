@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Discussions Management</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 257px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #4f46e5;
+            padding: 0 14px 30px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            margin: 20px 14px 10px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            margin: 4px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+
+        .menu a.active {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .menu-icon {
+            width: 25px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 257px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+        }
+
+        .topbar h1 {
+            font-size: 22px;
+            color: #111827;
+        }
+
+        .admin-info {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .content {
+            padding: 35px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* ================= DISCUSSION CARD ================= */
+
+        .discussion-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .discussion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+
+        .discussion-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .discussion-user {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        .discussion-date {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .discussion-content {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 15px 0;
+            word-break: break-word;
+        }
+
+        .discussion-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .reply-count {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .delete-btn {
+            border: none;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 9px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎬 MovieRecommender
+        </div>
+
+        <div class="menu">
+
+            <a href="{{ url_for('admin_dashboard') }}">
+                <div class="menu-icon">🏠</div>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_movies') }}">
+                <div class="menu-icon">🎬</div>
+                <span>Movies</span>
+            </a>
+
+            <a href="{{ url_for('admin_users') }}">
+                <div class="menu-icon">👥</div>
+                <span>Users</span>
+            </a>
+
+            <a href="{{ url_for('admin_ratings') }}">
+                <div class="menu-icon">⭐</div>
+                <span>Ratings</span>
+            </a>
+
+            <a href="{{ url_for('admin_discussions') }}"
+               class="active">
+                <div class="menu-icon">💬</div>
+                <span>Discussions</span>
+            </a>
+
+            <div class="menu-title">
+                MANAGEMENT
+            </div>
+
+            <a href="{{ url_for('admin_datasets') }}">
+                <div class="menu-icon">🗂️</div>
+                <span>Datasets</span>
+            </a>
+
+            <a href="#">
+                <div class="menu-icon">🤖</div>
+                <span>AI Features</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <h1>
+                Discussions Management
+            </h1>
+
+            <div class="admin-info">
+                Administrator
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+            <!-- ================= STATS ================= -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Total Discussions
+                    </div>
+
+                    <div class="stat-value">
+                        {{ discussions|length }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Active Discussions
+                    </div>
+
+                    <div class="stat-value">
+                        {{ discussions|length }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Community Posts
+                    </div>
+
+                    <div class="stat-value">
+                        {{ discussions|length }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= DISCUSSIONS ================= -->
+
+            {% if discussions %}
+
+                {% for discussion in discussions %}
+
+                    <div class="discussion-card">
+
+                        <div class="discussion-header">
+
+                            <div>
+
+                                <div class="discussion-title">
+
+                                    {% if discussion["title"] %}
+                                        {{ discussion["title"] }}
+                                    {% else %}
+                                        Untitled Discussion
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="discussion-user">
+
+                                    👤
+                                    {% if discussion["user_name"] %}
+                                        {{ discussion["user_name"] }}
+                                    {% elif discussion["name"] %}
+                                        {{ discussion["name"] }}
+                                    {% elif discussion["user_id"] %}
+                                        User #{{ discussion["user_id"] }}
+                                    {% else %}
+                                        User
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="discussion-date">
+
+                                {% if discussion["created_at"] %}
+                                    {{ discussion["created_at"] }}
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="discussion-content">
+
+                            {% if discussion["content"] %}
+                                {{ discussion["content"] }}
+                            {% elif discussion["message"] %}
+                                {{ discussion["message"] }}
+                            {% elif discussion["description"] %}
+                                {{ discussion["description"] }}
+                            {% else %}
+                                No discussion content available.
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="discussion-footer">
+
+                            <div class="reply-count">
+                                💬 Discussion
+                            </div>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'admin_delete_discussion',
+                                    discussion_id=discussion['id']
+                                ) }}"
+                                onsubmit="return confirm(
+                                    'Are you sure you want to delete this discussion?'
+                                );"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-btn"
+                                >
+                                    🗑 Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        💬
+                    </div>
+
+                    <h3>
+                        No Discussions Yet
+                    </h3>
+
+                    <p>
+                        User discussions will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>

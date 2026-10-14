@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovieRecommender</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#020814;
+    color:#fff;
+    min-height:100vh;
+}
+
+/* NAVBAR */
+.navbar{
+    height:64px;
+    width:100%;
+    background:#050b18;
+    border-bottom:1px solid #17243a;
+    display:flex;
+    align-items:center;
+    padding:0 22px;
+    position:relative;
+    z-index:1000;
+}
+
+.logo{
+    width:235px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+}
+
+.logo-icon{
+    width:46px;
+    height:46px;
+    min-width:46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    border-radius:50%;
+    background:transparent;
+    box-shadow:0 0 18px rgba(139,92,246,.35);
+}
+
+.logo-icon img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+}
+
+.logo-title{
+    font-size:16px;
+    font-weight:700;
+    line-height:1;
+    color:#fff;
+    white-space:nowrap;
+}
+
+.logo-title span{
+    color:#9b52ff;
+}
+
+.nav-links{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:34px;
+    flex:1;
+}
+
+.nav-links a{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    color:#d5d9e2;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    white-space:nowrap;
+    transition:.2s;
+}
+
+.nav-links a:hover{
+    color:#a969ff;
+    transform:translateY(-1px);
+}
+
+.nav-links a:first-child{
+    color:#9b52ff;
+}
+
+.nav-links a:first-child::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:3px;
+    background:#9b52ff;
+    border-radius:3px 3px 0 0;
+    box-shadow:0 0 10px rgba(155,82,255,.6);
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-left:auto;
+    flex-shrink:0;
+}
+
+.search-icon{
+    font-size:19px;
+    cursor:pointer;
+    opacity:.9;
+    margin-right:8px;
+    transition:.2s;
+}
+
+.search-icon:hover{
+    transform:scale(1.1);
+}
+
+.login-btn{
+    border:none;
+    background:linear-gradient(135deg,#7547d9,#7949e8);
+    color:#fff;
+    padding:9px 20px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:500;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.login-btn:hover{
+    background:#8d5af2;
+    transform:translateY(-1px);
+    box-shadow:0 6px 18px rgba(121,73,232,.3);
+}
+
+.register-btn{
+    text-decoration:none;
+    background:transparent;
+    color:#fff;
+    border:1px solid #7949e8;
+    padding:8px 17px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:500;
+    transition:.2s;
+}
+
+.register-btn:hover{
+    background:#7949e8;
+}
+
+.user-menu{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.welcome-user{
+    color:#d5d9e2;
+    font-size:13px;
+    font-weight:500;
+    white-space:nowrap;
+}
+
+.profile-btn{
+    text-decoration:none;
+    background:#7949e8;
+    color:#fff;
+    padding:9px 16px;
+    border-radius:6px;
+    font-size:13px;
+}
+
+.logout-btn{
+    text-decoration:none;
+    color:#ff9aa8;
+    border:1px solid #71303d;
+    padding:8px 14px;
+    border-radius:6px;
+    font-size:13px;
+}
+
+/* HERO */
+.hero{
+    min-height:360px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid #17243a;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(2,8,20,.97) 0%,
+            rgba(2,8,20,.91) 28%,
+            rgba(2,8,20,.70) 55%,
+            rgba(2,8,20,.42) 78%,
+            rgba(2,8,20,.22) 100%
+        ),
+        url("{{ url_for('static', filename='images/cinema-bg.png') }}");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            180deg,
+            transparent 45%,
+            rgba(2,8,20,.25) 70%,
+            #020814 100%
+        );
+    pointer-events:none;
+    z-index:1;
+}
+
+.hero-content{
+    position:relative;
+    z-index:20;
+    padding:55px 30px;
+}
+
+.hero h1{
+    max-width:700px;
+    font-size:52px;
+    line-height:1.08;
+    margin-bottom:18px;
+}
+
+.hero h1 span{
+    color:#9b52ff;
+}
+
+.hero p{
+    max-width:600px;
+    color:#c0c8d5;
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.hero-image{
+    position:absolute;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    width:470px;
+    height:330px;
+    z-index:5;
+    pointer-events:none;
+    overflow:hidden;
+    opacity:.82;
+    -webkit-mask-image:
+        radial-gradient(
+            ellipse 75% 72% at 58% 50%,
+            #000 30%,
+            rgba(0,0,0,.98) 48%,
+            rgba(0,0,0,.78) 65%,
+            rgba(0,0,0,.38) 82%,
+            transparent 100%
+        );
+    mask-image:
+        radial-gradient(
+            ellipse 75% 72% at 58% 50%,
+            #000 30%,
+            rgba(0,0,0,.98) 48%,
+            rgba(0,0,0,.78) 65%,
+            rgba(0,0,0,.38) 82%,
+            transparent 100%
+        );
+}
+
+.hero-image img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+    filter:
+        brightness(.82)
+        contrast(1.02)
+        saturate(.90)
+        drop-shadow(0 15px 35px rgba(0,0,0,.60));
+}
+
+/* SEARCH */
+.search-area{
+    width:500px;
+    max-width:100%;
+    position:relative;
+}
+
+.search-box{
+    display:flex;
+    width:100%;
+    height:48px;
+    box-shadow:0 8px 30px rgba(0,0,0,.30);
+    position:relative;
+    z-index:30;
+}
+
+.search-box input{
+    flex:1;
+    min-width:0;
+    border:none;
+    outline:none;
+    background:#fff;
+    color:#222;
+    padding:0 17px;
+    font-size:14px;
+    border-radius:6px 0 0 6px;
+}
+
+.search-box input::placeholder{
+    color:#7a7f88;
+}
+
+.search-box button{
+    width:100px;
+    flex-shrink:0;
+    border:none;
+    background:linear-gradient(135deg,#7547d9,#7745dd);
+    color:#fff;
+    font-size:14px;
+    border-radius:0 6px 6px 0;
+    cursor:pointer;
+}
+
+.search-box button:hover{
+    background:#8d5af2;
+}
+
+/* SUGGESTIONS */
+.suggestions-box{
+    display:none;
+    position:absolute;
+    left:0;
+    top:54px;
+    width:100%;
+    max-height:300px;
+    overflow-y:auto;
+    background:#071120;
+    border:1px solid #33425b;
+    border-radius:8px;
+    box-shadow:0 15px 40px rgba(0,0,0,.55);
+    z-index:999;
+    padding:6px 0;
+}
+
+.suggestion-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:9px 12px;
+    background:transparent;
+    border:none;
+    color:#e7ebf3;
+    text-align:left;
+    cursor:pointer;
+}
+
+.suggestion-item:hover{
+    background:#111d31;
+}
+
+.suggestion-poster{
+    width:35px;
+    height:48px;
+    min-width:35px;
+    border-radius:4px;
+    object-fit:cover;
+    background:#151f32;
+}
+
+.suggestion-icon{
+    width:35px;
+    height:48px;
+    min-width:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:4px;
+    background:#111c2d;
+    font-size:20px;
+    color:#9b52ff;
+}
+
+.suggestion-title{
+    font-size:13px;
+    font-weight:600;
+}
+
+.suggestion-subtitle{
+    margin-top:4px;
+    color:#8793a6;
+    font-size:11px;
+}
+
+/* PAGE */
+.page{
+    padding:0 30px 50px;
+}
+
+/* SELECTED MOVIE */
+.selected-section{
+    padding:28px 0 30px;
+    border-bottom:1px solid #17243a;
+}
+
+.selected-section h2{
+    font-size:25px;
+    margin-bottom:18px;
+}
+
+.selected-card{
+    width:100%;
+    max-width:1100px;
+    min-height:300px;
+    display:flex;
+    background:linear-gradient(135deg,#071120,#09162a);
+    border:1px solid #8952ed;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.30);
+}
+
+.selected-poster{
+    width:255px;
+    min-width:255px;
+    height:370px;
+    background:#111c2d;
+    overflow:hidden;
+}
+
+.selected-poster img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.selected-info{
+    padding:28px 38px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    flex:1;
+    min-width:0;
+}
+
+.selected-info h3{
+    font-size:32px;
+    line-height:1.2;
+    margin-bottom:18px;
+    color:#fff;
+}
+
+.movie-detail{
+    color:#fff;
+    font-size:15px;
+    line-height:1.65;
+    margin-bottom:8px;
+    max-width:900px;
+}
+
+.movie-detail strong{
+    color:#fff;
+    font-weight:700;
+}
+
+.movie-cast{
+    color:#fff;
+    font-size:15px;
+    line-height:1.65;
+    margin-bottom:8px;
+    max-width:900px;
+}
+
+.movie-cast strong{
+    color:#fff;
+    font-weight:700;
+}
+
+.no-poster{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    font-size:50px;
+    color:#9b52ff;
+    background:linear-gradient(145deg,#151b32,#071120);
+}
+
+.no-poster span{
+    margin-top:10px;
+    font-size:12px;
+    color:#7f8ba0;
+}
+
+/* RECOMMENDATIONS */
+.recommendations{
+    padding:28px 0 30px;
+    border-bottom:1px solid #17243a;
+}
+
+.recommendations h2{
+    font-size:25px;
+    margin-bottom:20px;
+}
+
+.recommendation-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:18px;
+}
+
+.recommendation-card{
+    background:#071120;
+    border:1px solid #1b2b40;
+    border-radius:8px;
+    overflow:hidden;
+    transition:.2s;
+}
+
+.recommendation-card:hover{
+    transform:translateY(-5px);
+    border-color:#8952ed;
+    box-shadow:0 10px 25px rgba(139,92,246,.12);
+}
+
+.recommendation-poster{
+    height:330px;
+    background:#111c2d;
+    overflow:hidden;
+}
+
+.recommendation-poster img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.recommendation-info{
+    padding:13px;
+}
+
+.recommendation-info h3{
+    font-size:14px;
+    line-height:1.4;
+    margin-bottom:8px;
+}
+
+.similarity{
+    color:#9b5aff;
+    font-size:12px;
+    margin-top:6px;
+}
+
+.movie-rating{
+    margin-top:6px;
+    color:#f0d15b;
+    font-size:12px;
+}
+
+/* GENRES */
+.genres-section{
+    padding:25px 0;
+    border-bottom:1px solid #17243a;
+}
+
+.genres-heading{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+.genres-heading-icon{
+    color:#a75cff;
+    font-size:22px;
+}
+
+.genres-grid{
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:12px;
+}
+
+.genre-btn{
+    min-height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:linear-gradient(145deg,#071120,#081426);
+    border:1px solid #263650;
+    border-radius:8px;
+    color:#dce2ed;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.genre-btn span{
+    color:#a65cff;
+    font-size:21px;
+}
+
+.genre-btn:hover{
+    transform:translateY(-3px);
+    border-color:#8952ed;
+    box-shadow:0 8px 22px rgba(139,92,246,.15);
+}
+
+/* ERROR */
+.error{
+    margin-top:15px;
+    width:500px;
+    max-width:100%;
+    background:#32151c;
+    border:1px solid #71303d;
+    padding:12px;
+    border-radius:6px;
+    color:#ff9aa8;
+    font-size:13px;
+}
+
+/* TRENDING */
+.trending-section{
+    margin-top:30px;
+    border-top:1px solid #17243a;
+    padding-top:25px;
+}
+
+.trending-heading{
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+.trending-grid{
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:15px;
+}
+
+.trend-card{
+    background:#071120;
+    border:1px solid #1b2b40;
+    border-radius:7px;
+    overflow:hidden;
+    transition:.2s;
+}
+
+.trend-card:hover{
+    transform:translateY(-4px);
+    border-color:#8952ed;
+}
+
+.trend-poster{
+    height:260px;
+    position:relative;
+    background:#111c2d;
+    overflow:hidden;
+}
+
+.trend-poster img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.rating{
+    position:absolute;
+    top:8px;
+    right:8px;
+    background:rgba(4,9,18,.92);
+    padding:5px 7px;
+    border-radius:5px;
+    font-size:10px;
+    color:#f0d15b;
+}
+
+.trend-info{
+    padding:11px;
+}
+
+.trend-title{
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:5px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.trend-year{
+    color:#778396;
+    font-size:10px;
+}
+
+/* FOOTER */
+footer{
+    margin-top:45px;
+    padding:25px;
+    text-align:center;
+    color:#5d697a;
+    font-size:11px;
+    border-top:1px solid #142238;
+}
+
+/* POPUP */
+.guest-popup-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(5px);
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.guest-popup{
+    width:430px;
+    max-width:90%;
+    background:#071120;
+    border:1px solid #8952ed;
+    border-radius:14px;
+    padding:32px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+.guest-popup-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#7547d9,#9b52ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+}
+
+.guest-popup h2{
+    font-size:23px;
+    margin-bottom:12px;
+}
+
+.guest-popup p{
+    color:#aeb8c9;
+    font-size:14px;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.guest-popup-buttons{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+}
+
+.popup-register-btn{
+    display:inline-block;
+    text-decoration:none;
+    background:#7949e8;
+    color:#fff;
+    padding:11px 22px;
+    border-radius:6px;
+}
+
+.popup-guest-btn{
+    border:1px solid #33425b;
+    background:transparent;
+    color:#cbd3df;
+    padding:11px 22px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* RESPONSIVE */
+@media(max-width:1200px){
+    .logo{
+        width:205px;
+    }
+
+    .nav-links{
+        gap:22px;
+    }
+
+    .nav-links a{
+        font-size:13px;
+    }
+
+    .hero-image{
+        right:0;
+        width:390px;
+        height:300px;
+    }
+
+    .recommendation-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .trending-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .genres-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:1000px){
+    .nav-links{
+        gap:17px;
+    }
+
+    .nav-links a{
+        font-size:12px;
+    }
+
+    .hero-image{
+        right:-20px;
+        width:350px;
+        height:280px;
+        opacity:.65;
+    }
+}
+
+@media(max-width:900px){
+    .navbar{
+        padding:0 18px;
+    }
+
+    .nav-links{
+        gap:14px;
+    }
+
+    .nav-links a{
+        font-size:11px;
+    }
+
+    .hero-image{
+        right:-40px;
+        width:320px;
+        height:250px;
+        opacity:.50;
+    }
+}
+
+@media(max-width:800px){
+    .nav-links{
+        display:none;
+    }
+
+    .hero{
+        min-height:330px;
+    }
+
+    .hero h1{
+        font-size:36px;
+    }
+
+    .hero-image{
+        display:none;
+    }
+
+    .search-area{
+        width:100%;
+    }
+
+    .genres-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .recommendation-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .trending-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:650px){
+    .selected-card{
+        flex-direction:column;
+    }
+
+    .selected-poster{
+        width:100%;
+        min-width:100%;
+        height:380px;
+    }
+
+    .selected-info{
+        padding:25px;
+    }
+
+    .selected-info h3{
+        font-size:25px;
+    }
+}
+
+@media(max-width:500px){
+    .logo-title{
+        font-size:15px;
+    }
+
+    .logo-icon{
+        width:38px;
+        height:38px;
+        min-width:38px;
+    }
+
+    .hero-content{
+        padding:40px 20px;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+    .page{
+        padding:0 15px 35px;
+    }
+
+    .genres-grid{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .genre-btn{
+        min-height:52px;
+        font-size:11px;
+        gap:6px;
+    }
+
+    .genre-btn span{
+        font-size:17px;
+    }
+
+    .recommendation-grid{
+        grid-template-columns:1fr;
+    }
+
+    .trending-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .welcome-user,
+    .search-icon{
+        display:none;
+    }
+
+    .movie-detail,
+    .movie-cast{
+        font-size:13px;
+        line-height:1.7;
+    }
+}
+</style>
+</head>
+
+<body data-user-logged-in="{{ 'true' if user_logged_in else 'false' }}">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender Logo"
+            >
+        </div>
+
+        <div class="logo-title">
+            Movie<span>Recommender</span>
+        </div>
+
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/movies">Movies</a>
+
+        <a href="/ai-assistant">AI Assistant</a>
+
+        <a href="/student-mode">Student Mode</a>
+
+        <a href="/discussion">Discussion</a>
+
+    </div>
+
+    <div class="nav-right">
+
+        <div class="search-icon">🔍</div>
+
+        {% if user_logged_in %}
+
+        <div class="user-menu">
+
+            <span class="welcome-user">
+                Hi, {{ user_name }}
+            </span>
+
+            <a href="/profile" class="profile-btn">
+                Profile
+            </a>
+
+            <a href="/logout" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+        {% else %}
+
+        <button
+            class="login-btn"
+            onclick="window.location.href='/login'"
+        >
+            Login
+        </button>
+
+        <a href="/register" class="register-btn">
+            Register
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Welcome to
+            <span>Movie Recommendation System</span>
+        </h1>
+
+        <p>
+            Discover and get personalized movie
+            recommendations based on your preferences.
+        </p>
+
+        <div class="search-area">
+
+            <form
+                method="POST"
+                class="search-box"
+                id="movieSearchForm"
+            >
+
+                <input
+                    type="text"
+                    name="movie_name"
+                    id="movieSearchInput"
+                    placeholder="Search for a movie..."
+                    value="{{ movie_name }}"
+                    autocomplete="off"
+                >
+
+                <button type="submit">
+                    Search
+                </button>
+
+            </form>
+
+            <div
+                class="suggestions-box"
+                id="suggestionsBox"
+            ></div>
+
+        </div>
+
+        {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="hero-image">
+
+        <img
+            src="{{ url_for('static', filename='images/movie-art.png') }}"
+            alt="Movies"
+        >
+
+    </div>
+
+</section>
+
+
+<!-- MAIN -->
+<main class="page">
+
+{% if selected_movie %}
+
+<section class="selected-section">
+
+    <h2>
+        Selected Movie
+    </h2>
+
+    <div class="selected-card">
+
+        <!-- POSTER -->
+        <div class="selected-poster">
+
+            {% if selected_movie.poster_url %}
+
+            <img
+                src="{{ selected_movie.poster_url }}"
+                alt="{{ selected_movie.title }}"
+            >
+
+            {% else %}
+
+            <div class="no-poster">
+                🍿
+                <span>Poster unavailable</span>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- MOVIE INFORMATION -->
+        <div class="selected-info">
+
+            <h3>
+                {{ selected_movie.title }}
+            </h3>
+
+
+            <!-- RATING -->
+            {% if selected_movie.rating %}
+
+            <div class="movie-detail">
+
+                ⭐
+
+                <strong>
+                    Rating:
+                </strong>
+
+                {{ selected_movie.rating }}/10
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- YEAR -->
+            {% if selected_movie.year %}
+
+            <div class="movie-detail">
+
+                📅
+
+                <strong>
+                    Year:
+                </strong>
+
+                {{ selected_movie.year }}
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- GENRE -->
+            {% if selected_movie.genres %}
+
+            <div class="movie-detail">
+
+                🎭
+
+                <strong>
+                    Genre:
+                </strong>
+
+                {{ selected_movie.genres }}
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- ACTRESS -->
+            {% if selected_movie.actress %}
+
+            <div class="movie-detail">
+
+                👩
+
+                <strong>
+                    Actress:
+                </strong>
+
+                {{ selected_movie.actress | join(', ') }}
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- ACTOR -->
+            {% if selected_movie.cast %}
+
+            <div class="movie-cast">
+
+                👨
+
+                <strong>
+                    Actor:
+                </strong>
+
+                {{ selected_movie.cast | join(', ') }}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<!-- RECOMMENDATIONS -->
+{% if recommendations %}
+
+<section class="recommendations">
+
+    <h2>
+        Recommended Movies
+    </h2>
+
+    <div class="recommendation-grid">
+
+        {% for movie in recommendations %}
+
+        <div class="recommendation-card">
+
+            <div class="recommendation-poster">
+
+                {% if movie.poster_url %}
+
+                <img
+                    src="{{ movie.poster_url }}"
+                    alt="{{ movie.title }}"
+                    loading="lazy"
+                >
+
+                {% else %}
+
+                <div class="no-poster">
+                    🍿
+                    <span>Poster unavailable</span>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="recommendation-info">
+
+                <h3>
+                    {{ loop.index }}. {{ movie.title }}
+                </h3>
+
+                {% if movie.similarity is defined %}
+
+                <p class="similarity">
+                    {{ movie.similarity }}% similarity
+                </p>
+
+                {% endif %}
+
+                {% if movie.rating %}
+
+                <p class="movie-rating">
+                    ⭐ {{ movie.rating }}
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<!-- POPULAR GENRES -->
+<section class="genres-section">
+
+    <div class="genres-heading">
+
+        <span class="genres-heading-icon">
+            🎞
+        </span>
+
+        <span>
+            Popular Genres
+        </span>
+
+    </div>
+
+    <div class="genres-grid">
+
+        <a href="/movies?genre=Action" class="genre-btn">
+            <span>✦</span>
+            Action
+        </a>
+
+        <a href="/movies?genre=Adventure" class="genre-btn">
+            <span>♢</span>
+            Adventure
+        </a>
+
+        <a href="/movies?genre=Comedy" class="genre-btn">
+            <span>☺</span>
+            Comedy
+        </a>
+
+        <a href="/movies?genre=Drama" class="genre-btn">
+            <span>♜</span>
+            Drama
+        </a>
+
+        <a href="/movies?genre=Sci-Fi" class="genre-btn">
+            <span>🚀</span>
+            Sci-Fi
+        </a>
+
+        <a href="/movies?genre=Thriller" class="genre-btn">
+            <span>♧</span>
+            Thriller
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- TRENDING -->
+<section class="trending-section">
+
+    <div class="trending-heading">
+        🔥 Trending Movies
+    </div>
+
+    <div class="trending-grid">
+
+        {% for movie in trending_movies %}
+
+        <div class="trend-card">
+
+            <div class="trend-poster">
+
+                {% if movie.poster_url %}
+
+                <img
+                    src="{{ movie.poster_url }}"
+                    alt="{{ movie.title }}"
+                    loading="lazy"
+                >
+
+                {% else %}
+
+                <div class="no-poster">
+                    🍿
+                </div>
+
+                {% endif %}
+
+                {% if movie.rating %}
+
+                <div class="rating">
+                    ⭐ {{ movie.rating }}
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="trend-info">
+
+                <div class="trend-title">
+                    {{ movie.title }}
+                </div>
+
+                <div class="trend-year">
+
+                    {% if movie.year %}
+                        {{ movie.year }}
+                    {% else %}
+                        Movie
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer>
+    Movie Recommendation System © 2026
+</footer>
+
+
+<!-- GUEST POPUP -->
+<div
+    class="guest-popup-overlay"
+    id="guestPopup"
+>
+
+    <div class="guest-popup">
+
+        <div class="guest-popup-icon">
+            🎬
+        </div>
+
+        <h2>
+            Enjoying MovieRecommender?
+        </h2>
+
+        <p>
+            Create a free account to get personalized
+            movie recommendations and enjoy more features.
+        </p>
+
+        <div class="guest-popup-buttons">
+
+            <a
+                href="/register"
+                class="popup-register-btn"
+            >
+                Register Now
+            </a>
+
+            <button
+                type="button"
+                class="popup-guest-btn"
+                id="continueGuestBtn"
+            >
+                Continue as Guest
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+const searchInput =
+    document.getElementById("movieSearchInput");
+
+const suggestionsBox =
+    document.getElementById("suggestionsBox");
+
+const searchForm =
+    document.getElementById("movieSearchForm");
+
+let suggestionTimer = null;
+
+
+function hideSuggestions(){
+
+    if(!suggestionsBox){
+        return;
+    }
+
+    suggestionsBox.style.display = "none";
+    suggestionsBox.innerHTML = "";
+}
+
+
+function showSuggestions(){
+
+    if(!suggestionsBox){
+        return;
+    }
+
+    suggestionsBox.style.display = "block";
+}
+
+
+function escapeHTML(value){
+
+    const div = document.createElement("div");
+
+    div.textContent = value;
+
+    return div.innerHTML;
+}
+
+
+function createSuggestion(movie){
+
+    const button =
+        document.createElement("button");
+
+    button.type = "button";
+
+    button.className = "suggestion-item";
+
+    let posterHTML = "";
+
+    if(movie.poster_url){
+
+        posterHTML = `
+            <img
+                class="suggestion-poster"
+                src="${escapeHTML(movie.poster_url)}"
+                alt=""
+            >
+        `;
+
+    }else{
+
+        posterHTML = `
+            <div class="suggestion-icon">
+                🎬
+            </div>
+        `;
+    }
+
+    const ratingText =
+        movie.rating
+        ? " • ⭐ " +
+          escapeHTML(String(movie.rating))
+        : "";
+
+    button.innerHTML = `
+
+        ${posterHTML}
+
+        <div>
+
+            <div class="suggestion-title">
+                ${escapeHTML(movie.title || "")}
+            </div>
+
+            <div class="suggestion-subtitle">
+                Movie ${ratingText}
+            </div>
+
+        </div>
+    `;
+
+    button.addEventListener("click",function(){
+
+        if(searchInput){
+
+            searchInput.value =
+                movie.title || "";
+
+        }
+
+        hideSuggestions();
+
+        if(searchForm){
+
+            searchForm.submit();
+
+        }
+
+    });
+
+    return button;
+}
+
+
+async function loadSuggestions(query){
+
+    if(!query){
+
+        hideSuggestions();
+
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                "/movie-suggestions?q=" +
+                encodeURIComponent(query)
+            );
+
+        if(!response.ok){
+
+            hideSuggestions();
+
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        let suggestions = [];
+
+        if(Array.isArray(data)){
+
+            suggestions = data;
+
+        }else if(
+            data &&
+            Array.isArray(data.suggestions)
+        ){
+
+            suggestions =
+                data.suggestions;
+
+        }
+
+        suggestionsBox.innerHTML = "";
+
+        if(suggestions.length === 0){
+
+            hideSuggestions();
+
+            return;
+        }
+
+        suggestions
+            .slice(0,8)
+            .forEach(function(movie){
+
+                suggestionsBox.appendChild(
+                    createSuggestion(movie)
+                );
+
+            });
+
+        showSuggestions();
+
+    }catch(error){
+
+        console.log(
+            "Suggestion error:",
+            error
+        );
+
+        hideSuggestions();
+
+    }
+}
+
+
+if(searchInput){
+
+    searchInput.addEventListener(
+        "input",
+        function(){
+
+            const query =
+                searchInput.value.trim();
+
+            clearTimeout(
+                suggestionTimer
+            );
+
+            suggestionTimer =
+                setTimeout(
+                    function(){
+
+                        loadSuggestions(
+                            query
+                        );
+
+                    },
+                    200
+                );
+
+        }
+    );
+
+    searchInput.addEventListener(
+        "keydown",
+        function(event){
+
+            if(event.key === "Escape"){
+
+                hideSuggestions();
+
+            }
+
+        }
+    );
+}
+
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const searchArea =
+            document.querySelector(
+                ".search-area"
+            );
+
+        if(
+            searchArea &&
+            !searchArea.contains(
+                event.target
+            )
+        ){
+
+            hideSuggestions();
+
+        }
+
+    }
+);
+
+
+/* GUEST POPUP */
+
+const guestPopup =
+    document.getElementById(
+        "guestPopup"
+    );
+
+const continueGuestBtn =
+    document.getElementById(
+        "continueGuestBtn"
+    );
+
+const isUserLoggedIn =
+    document.body.dataset.userLoggedIn === "true";
+
+let guestPopupTimer = null;
+
+
+function showGuestPopup(){
+
+    if(
+        guestPopup &&
+        !isUserLoggedIn
+    ){
+
+        guestPopup.style.display =
+            "flex";
+
+    }
+}
+
+
+function closeGuestPopup(){
+
+    if(guestPopup){
+
+        guestPopup.style.display =
+            "none";
+
+    }
+
+    if(guestPopupTimer){
+
+        clearTimeout(
+            guestPopupTimer
+        );
+
+        guestPopupTimer = null;
+
+    }
+}
+
+
+if(!isUserLoggedIn){
+
+    guestPopupTimer =
+        setTimeout(
+            showGuestPopup,
+            30000
+        );
+
+}
+
+
+if(continueGuestBtn){
+
+    continueGuestBtn.addEventListener(
+        "click",
+        closeGuestPopup
+    );
+
+}
+
+
+if(guestPopup){
+
+    guestPopup.addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                guestPopup
+            ){
+
+                closeGuestPopup();
+
+            }
+
+        }
+    );
+
+}
+</script>
+
+</body>
+</html>

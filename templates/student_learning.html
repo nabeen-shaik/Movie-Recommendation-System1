@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+    Student Learning - MovieRecommender
+</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #020814;
+
+    color: white;
+
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+
+.navbar {
+
+    height: 64px;
+
+    background: #050b18;
+
+    border-bottom:
+        1px solid #17243a;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 25px;
+}
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    width: 250px;
+}
+
+.logo img {
+
+    width: 38px;
+
+    height: 38px;
+
+    object-fit: contain;
+}
+
+.logo-title {
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+.logo-title span {
+
+    color: #9b52ff;
+}
+
+.nav-links {
+
+    flex: 1;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 32px;
+}
+
+.nav-links a {
+
+    color: #d5d9e2;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    padding: 22px 0;
+}
+
+.nav-links a:hover {
+
+    color: #9b52ff;
+}
+
+.nav-right {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.login-btn {
+
+    background: #7949e8;
+
+    color: white;
+
+    border: none;
+
+    padding: 9px 20px;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+.register-btn {
+
+    color: white;
+
+    border:
+        1px solid #7949e8;
+
+    padding: 8px 17px;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.page {
+
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 35px 20px 60px;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.learning-header {
+
+    background:
+        linear-gradient(
+            145deg,
+            #071120,
+            #0b1630
+        );
+
+    border:
+        1px solid #263650;
+
+    border-radius: 10px;
+
+    padding: 30px;
+
+    margin-bottom: 18px;
+
+    text-align: center;
+}
+
+.learning-icon {
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7547d9,
+            #9b52ff
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 32px;
+
+    margin:
+        0 auto 15px;
+}
+
+.learning-header h1 {
+
+    font-size: 28px;
+
+    margin-bottom: 10px;
+}
+
+.learning-header p {
+
+    color: #aeb8c9;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   MOVIE CARD
+============================================================ */
+
+.movie-card {
+
+    background: #071120;
+
+    border:
+        1px solid #263650;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    display: flex;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+.poster {
+
+    width: 150px;
+
+    height: 210px;
+
+    flex-shrink: 0;
+
+    background: #020814;
+
+    border:
+        1px solid #263650;
+
+    border-radius: 7px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.poster img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.poster-placeholder {
+
+    color: #748096;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    padding: 15px;
+}
+
+.movie-info {
+
+    padding-top: 5px;
+
+    flex: 1;
+}
+
+.movie-info h2 {
+
+    font-size: 25px;
+
+    margin-bottom: 12px;
+}
+
+.tags {
+
+    display: flex;
+
+    gap: 7px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 15px;
+}
+
+.tag {
+
+    background: #0c1930;
+
+    border:
+        1px solid #263650;
+
+    color: #cbd3df;
+
+    padding: 6px 9px;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+}
+
+.movie-info p {
+
+    color: #aeb8c9;
+
+    font-size: 13px;
+
+    line-height: 1.8;
+}
+
+
+/* ============================================================
+   CONTENT
+============================================================ */
+
+.content-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 14px;
+}
+
+.learning-card {
+
+    background: #071120;
+
+    border:
+        1px solid #263650;
+
+    border-radius: 9px;
+
+    padding: 20px;
+}
+
+.learning-card h3 {
+
+    font-size: 16px;
+
+    margin-bottom: 12px;
+
+    color: white;
+}
+
+.learning-card p {
+
+    color: #b8c2d2;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+}
+
+.learning-card ul {
+
+    padding-left: 18px;
+
+    color: #b8c2d2;
+
+    font-size: 12px;
+
+    line-height: 2;
+}
+
+.learning-card li {
+
+    margin-bottom: 3px;
+}
+
+
+/* ============================================================
+   QUIZ BUTTON
+============================================================ */
+
+.quiz-section {
+
+    margin-top: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0b1328,
+            #15112e
+        );
+
+    border:
+        1px solid #8952ed;
+
+    border-radius: 9px;
+
+    padding: 22px;
+
+    text-align: center;
+}
+
+.quiz-section h2 {
+
+    font-size: 18px;
+
+    margin-bottom: 8px;
+}
+
+.quiz-section p {
+
+    color: #aeb8c9;
+
+    font-size: 12px;
+
+    margin-bottom: 15px;
+}
+
+.quiz-btn {
+
+    display: inline-block;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7547d9,
+            #9b52ff
+        );
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 11px 22px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.quiz-btn:hover {
+
+    transform: translateY(-2px);
+}
+
+
+/* ============================================================
+   BACK
+============================================================ */
+
+.back-btn {
+
+    display: inline-block;
+
+    margin-bottom: 15px;
+
+    color: #b99aff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+}
+
+.back-btn:hover {
+
+    color: white;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width: 800px) {
+
+    .nav-links {
+
+        display: none;
+    }
+
+    .movie-card {
+
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .tags {
+
+        justify-content: center;
+    }
+
+    .content-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='images/logo.png'
+            ) }}"
+            alt="MovieRecommender"
+        >
+
+        <div class="logo-title">
+
+            Movie<span>Recommender</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/movies">
+            Movies
+        </a>
+
+        <a href="/ai-assistant">
+            AI Assistant
+        </a>
+
+        <a href="/student-mode">
+            Student Mode
+        </a>
+
+        <a href="/discussion">
+            Discussion
+        </a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <a
+            href="/login"
+            class="login-btn"
+        >
+            Login
+        </a>
+
+        <a
+            href="/register"
+            class="register-btn"
+        >
+            Register
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
+
+<main class="page">
+
+
+    <a
+        href="/student-mode"
+        class="back-btn"
+    >
+        ← Back to Student Mode
+    </a>
+
+
+    <!-- HEADER -->
+
+    <section class="learning-header">
+
+        <div class="learning-icon">
+            🎓
+        </div>
+
+        <h1>
+            What Can You Learn?
+        </h1>
+
+        <p>
+            Explore educational concepts,
+            important lessons and real-world
+            knowledge from the selected movie.
+        </p>
+
+    </section>
+
+
+    {% if movie %}
+
+
+    <!-- MOVIE -->
+
+    <section class="movie-card">
+
+
+        <div class="poster">
+
+            {% if movie.poster_url %}
+
+                <img
+                    src="{{ movie.poster_url }}"
+                    alt="{{ movie.title }}"
+                >
+
+            {% else %}
+
+                <div class="poster-placeholder">
+
+                    🎬
+
+                    <br><br>
+
+                    Poster not available
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="movie-info">
+
+            <h2>
+                {{ movie.title }}
+            </h2>
+
+
+            <div class="tags">
+
+                {% if movie.genres %}
+
+                    {% for genre in movie.genres.split('|') %}
+
+                        <div class="tag">
+                            🎬 {{ genre }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+                {% if movie.year %}
+
+                    <div class="tag">
+                        📅 {{ movie.year }}
+                    </div>
+
+                {% endif %}
+
+
+                {% if movie.rating %}
+
+                    <div class="tag">
+                        ⭐ {{ movie.rating }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <p>
+
+                {{ movie.overview or
+                "Explore the ideas, lessons and
+                concepts presented in this movie."
+                }}
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- LEARNING CONTENT -->
+
+    <section class="content-grid">
+
+
+        <div class="learning-card">
+
+            <h3>
+                🔬 Scientific Concepts
+            </h3>
+
+            <p>
+                Identify scientific ideas,
+                theories and technologies
+                shown or discussed in the movie.
+            </p>
+
+            <br>
+
+            <ul>
+
+                <li>
+                    Understand important scientific ideas.
+                </li>
+
+                <li>
+                    Connect movie concepts with subjects.
+                </li>
+
+                <li>
+                    Identify technology used in the story.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="learning-card">
+
+            <h3>
+                🧠 Life Lessons
+            </h3>
+
+            <p>
+                Understand useful lessons that
+                students can apply in education
+                and everyday life.
+            </p>
+
+            <br>
+
+            <ul>
+
+                <li>
+                    Decision making
+                </li>
+
+                <li>
+                    Teamwork and cooperation
+                </li>
+
+                <li>
+                    Responsibility and perseverance
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="learning-card">
+
+            <h3>
+                👥 Characters & Themes
+            </h3>
+
+            <p>
+                Analyze characters, their decisions,
+                relationships and the major themes
+                of the movie.
+            </p>
+
+            <br>
+
+            <ul>
+
+                <li>
+                    Character decisions
+                </li>
+
+                <li>
+                    Relationships
+                </li>
+
+                <li>
+                    Main themes
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="learning-card">
+
+            <h3>
+                🌍 Real World Connection
+            </h3>
+
+            <p>
+                Connect ideas shown in the movie
+                with real-world situations,
+                education and careers.
+            </p>
+
+            <br>
+
+            <ul>
+
+                <li>
+                    Real-world applications
+                </li>
+
+                <li>
+                    Academic connections
+                </li>
+
+                <li>
+                    Career-related knowledge
+                </li>
+
+            </ul>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- QUIZ -->
+
+    <section class="quiz-section">
+
+        <h2>
+            🧠 Test Your Knowledge
+        </h2>
+
+        <p>
+            After learning from
+            <strong>{{ movie.title }}</strong>,
+            test your understanding with
+            a movie-based quiz.
+        </p>
+
+
+        <a
+            href="{{ url_for(
+                'student_quiz',
+                movie=movie.title
+            ) }}"
+            class="quiz-btn"
+        >
+            Start Movie Quiz →
+        </a>
+
+    </section>
+
+
+    {% else %}
+
+
+    <!-- MOVIE NOT FOUND -->
+
+    <section class="learning-card">
+
+        <h3>
+            🎬 Movie Not Found
+        </h3>
+
+        <p>
+            Please return to Student Mode
+            and select a valid movie from
+            the dataset.
+        </p>
+
+    </section>
+
+
+    {% endif %}
+
+
+</main>
+
+</body>
+
+</html>

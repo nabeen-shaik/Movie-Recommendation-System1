@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Movie Quiz - Student Mode</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #020814;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    height: 66px;
+    background: #050b18;
+    border-bottom: 1px solid #17243a;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 25px;
+}
+
+.logo {
+    width: 250px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.logo-title {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.logo-title span {
+    color: #9b52ff;
+}
+
+.nav-links {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 32px;
+}
+
+.nav-links a {
+    color: #d5d9e2;
+    text-decoration: none;
+
+    font-size: 14px;
+
+    padding: 23px 0;
+
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #9b52ff;
+}
+
+.nav-links a:nth-child(4) {
+    color: #9b52ff;
+}
+
+/* ================= RIGHT NAV ================= */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-btn {
+    background: #7949e8;
+    color: white;
+
+    text-decoration: none;
+
+    padding: 9px 18px;
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+.register-btn {
+    color: white;
+
+    text-decoration: none;
+
+    border: 1px solid #7949e8;
+
+    padding: 8px 16px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+.profile-btn {
+    background: #7949e8;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 8px 15px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+.logout-btn {
+    color: #ff9aa8;
+
+    text-decoration: none;
+
+    border: 1px solid #71303d;
+
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+.welcome-user {
+    color: #d5d9e2;
+    font-size: 13px;
+}
+
+/* ================= PAGE ================= */
+
+.page {
+    max-width: 950px;
+
+    margin: auto;
+
+    padding: 35px 20px 70px;
+}
+
+/* ================= BACK ================= */
+
+.back-link {
+    display: inline-block;
+
+    color: #aeb8c9;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    margin-bottom: 20px;
+}
+
+.back-link:hover {
+    color: #9b52ff;
+}
+
+/* ================= HEADER ================= */
+
+.quiz-header {
+    background:
+        linear-gradient(
+            145deg,
+            #071120,
+            #0d1830
+        );
+
+    border: 1px solid #8952ed;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    display: flex;
+
+    gap: 20px;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.poster {
+    width: 100px;
+    height: 145px;
+
+    flex-shrink: 0;
+
+    background: #050d1a;
+
+    border: 1px solid #263650;
+
+    border-radius: 7px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.poster img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.no-poster {
+    color: #68758a;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.quiz-info h1 {
+    font-size: 26px;
+
+    margin-bottom: 8px;
+}
+
+.quiz-info h1 span {
+    color: #9b52ff;
+}
+
+.quiz-info p {
+    color: #aeb8c9;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+/* ================= QUIZ CARD ================= */
+
+.quiz-card {
+    background: #071120;
+
+    border: 1px solid #1b2b40;
+
+    border-radius: 10px;
+
+    padding: 22px;
+}
+
+.quiz-title {
+    font-size: 19px;
+
+    margin-bottom: 7px;
+}
+
+.quiz-subtitle {
+    color: #8793a6;
+
+    font-size: 11px;
+
+    margin-bottom: 22px;
+}
+
+/* ================= QUESTION ================= */
+
+.question {
+    background: #050d1a;
+
+    border: 1px solid #263650;
+
+    border-radius: 8px;
+
+    padding: 18px;
+
+    margin-bottom: 14px;
+}
+
+.question-number {
+    color: #9b52ff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.question-text {
+    color: #ffffff;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    margin-bottom: 14px;
+}
+
+/* ================= OPTIONS ================= */
+
+.option {
+    display: block;
+
+    background: #071120;
+
+    border: 1px solid #263650;
+
+    border-radius: 6px;
+
+    padding: 10px;
+
+    margin-bottom: 7px;
+
+    color: #cbd3df;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.option:hover {
+    border-color: #8952ed;
+
+    background: #0b172a;
+}
+
+.option input {
+    margin-right: 8px;
+
+    cursor: pointer;
+}
+
+.option.selected {
+    border-color: #9b52ff;
+
+    background: rgba(155,82,255,0.12);
+
+    color: white;
+}
+
+/* ================= SUBMIT ================= */
+
+.submit-area {
+    text-align: center;
+
+    margin-top: 22px;
+}
+
+.submit-btn {
+    border: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7547d9,
+            #9b52ff
+        );
+
+    color: white;
+
+    padding: 12px 30px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.submit-btn:hover {
+    box-shadow:
+        0 8px 20px rgba(139,92,246,0.25);
+
+    transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+/* ================= RESULT ================= */
+
+.result-box {
+    margin-top: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0b1328,
+            #10152d
+        );
+
+    border: 1px solid #8952ed;
+
+    border-radius: 10px;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+.result-box h2 {
+    font-size: 22px;
+
+    margin-bottom: 10px;
+}
+
+.score {
+    color: #9b52ff;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.result-message {
+    color: #aeb8c9;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+.retry-btn {
+    display: inline-block;
+
+    margin-top: 16px;
+
+    background: #7949e8;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 10px 22px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+
+    transition: 0.2s;
+}
+
+.retry-btn:hover {
+    background: #8b5cf6;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    border-top: 1px solid #142238;
+
+    padding: 22px;
+
+    text-align: center;
+
+    color: #5d697a;
+
+    font-size: 11px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .logo {
+        flex: 1;
+        width: auto;
+    }
+
+    .nav-right {
+        gap: 5px;
+    }
+
+    .welcome-user {
+        display: none;
+    }
+
+    .page {
+        padding: 25px 12px 50px;
+    }
+
+    .quiz-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .quiz-info h1 {
+        font-size: 22px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+
+    <div class="logo">
+
+
+        <div class="logo-icon">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender"
+            >
+
+        </div>
+
+
+        <div class="logo-title">
+
+            Movie<span>Recommender</span>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/movies">
+            Movies
+        </a>
+
+        <a href="/ai-assistant">
+            AI Assistant
+        </a>
+
+        <a href="/student-mode">
+            Student Mode
+        </a>
+
+        <a href="/discussion">
+            Discussion
+        </a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+
+        {% if user_logged_in %}
+
+
+            <span class="welcome-user">
+
+                Hi, {{ user_name }}
+
+            </span>
+
+
+            <a
+                href="/profile"
+                class="profile-btn"
+            >
+
+                Profile
+
+            </a>
+
+
+            <a
+                href="/logout"
+                class="logout-btn"
+            >
+
+                Logout
+
+            </a>
+
+
+        {% else %}
+
+
+            <a
+                href="/login"
+                class="login-btn"
+            >
+
+                Login
+
+            </a>
+
+
+            <a
+                href="/register"
+                class="register-btn"
+            >
+
+                Register
+
+            </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</nav>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="page">
+
+
+    <!-- ================= BACK ================= -->
+
+    <a
+        href="{{ url_for(
+            'student_topic',
+            movie=movie.title if movie else movie_title,
+            topic='movie-analysis'
+        ) }}"
+        class="back-link"
+    >
+
+        ← Back to Learning
+
+    </a>
+
+
+
+    <!-- ================= MOVIE HEADER ================= -->
+
+    <section class="quiz-header">
+
+
+        <div class="poster">
+
+
+            {% if movie and movie.poster_url %}
+
+
+                <img
+                    src="{{ movie.poster_url }}"
+                    alt="{{ movie.title }}"
+                >
+
+
+            {% else %}
+
+
+                <div class="no-poster">
+
+                    🎬
+
+                    <br><br>
+
+                    Poster unavailable
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <div class="quiz-info">
+
+
+            <h1>
+
+                📝
+
+                <span>
+
+                    {{ movie.title if movie else movie_title }}
+
+                </span>
+
+                Quiz
+
+            </h1>
+
+
+            <p>
+
+                Test what you learned from
+
+                <strong>
+
+                    {{ movie.title if movie else movie_title }}
+
+                </strong>.
+
+                Answer all questions and check
+                your knowledge.
+
+            </p>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= QUIZ CARD ================= -->
+
+    <section class="quiz-card">
+
+
+        <h2 class="quiz-title">
+
+            🎓 Movie Learning Quiz
+
+        </h2>
+
+
+        <p class="quiz-subtitle">
+
+            Choose the best answer for each question.
+
+        </p>
+
+
+
+        <!-- ================= QUIZ FORM ================= -->
+
+        <form
+            method="POST"
+            action="{{ url_for('student_quiz') }}"
+            id="quizForm"
+        >
+
+
+            <!-- Keep movie title during POST -->
+
+            <input
+                type="hidden"
+                name="movie"
+                value="{{ movie.title if movie else movie_title }}"
+            >
+
+
+
+            <!-- ================= QUESTIONS ================= -->
+
+            {% for q in quiz_questions %}
+
+
+                {% set question_index = loop.index0 %}
+
+
+                <div class="question">
+
+
+                    <div class="question-number">
+
+                        QUESTION {{ loop.index }}
+
+                    </div>
+
+
+                    <div class="question-text">
+
+                        {{ q.question }}
+
+                    </div>
+
+
+
+                    {% for option in q.options %}
+
+
+                        <label class="option">
+
+
+                            <input
+                                type="radio"
+                                name="q{{ question_index }}"
+                                value="{{ option }}"
+                                required
+                            >
+
+
+                            {{ option }}
+
+
+                        </label>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+
+            <!-- ================= SUBMIT BUTTON ================= -->
+
+            <div class="submit-area">
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                    id="submitQuizBtn"
+                >
+
+                    ✅ Submit Quiz
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+
+        <!-- ================= RESULT ================= -->
+
+        {% if quiz_result %}
+
+
+            <div class="result-box">
+
+
+                <h2>
+
+                    🎉 Quiz Completed!
+
+                </h2>
+
+
+
+                <div class="score">
+
+                    {{ quiz_result.score }}/{{ quiz_result.total }}
+
+                </div>
+
+
+
+                <p class="result-message">
+
+
+                    {% if quiz_result.percentage == 100 %}
+
+
+                        Excellent! 🌟
+
+                        <br>
+
+                        You understood the movie
+                        learning concepts very well.
+
+
+                    {% elif quiz_result.percentage >= 60 %}
+
+
+                        Good job! 👍
+
+                        <br>
+
+                        You understood most of
+                        the important concepts.
+
+
+                    {% else %}
+
+
+                        Keep learning! 📚
+
+                        <br>
+
+                        Review the movie lessons
+                        and try the quiz again.
+
+
+                    {% endif %}
+
+
+                </p>
+
+
+
+                <a
+                    href="{{ url_for(
+                        'student_quiz',
+                        movie=movie.title if movie else movie_title
+                    ) }}"
+                    class="retry-btn"
+                >
+
+                    🔄 Try Again
+
+                </a>
+
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    Movie Recommendation System © 2026
+
+</footer>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* ==========================================
+   SELECTED OPTION HIGHLIGHT
+   ========================================== */
+
+const options =
+    document.querySelectorAll(".option");
+
+
+options.forEach(function(option) {
+
+
+    const radio =
+        option.querySelector("input");
+
+
+    radio.addEventListener(
+        "change",
+        function() {
+
+
+            const name =
+                radio.name;
+
+
+            document
+                .querySelectorAll(
+                    'input[name="' + name + '"]'
+                )
+                .forEach(function(input) {
+
+
+                    const parent =
+                        input.closest(".option");
+
+
+                    if (parent) {
+
+                        parent.classList.remove(
+                            "selected"
+                        );
+
+                    }
+
+
+                });
+
+
+            option.classList.add(
+                "selected"
+            );
+
+
+        }
+    );
+
+
+});
+
+
+
+/* ==========================================
+   SUBMIT BUTTON
+   ========================================== */
+
+const quizForm =
+    document.getElementById("quizForm");
+
+
+if (quizForm) {
+
+
+    quizForm.addEventListener(
+        "submit",
+        function() {
+
+
+            const submitButton =
+                document.getElementById(
+                    "submitQuizBtn"
+                );
+
+
+            if (submitButton) {
+
+
+                submitButton.disabled = true;
+
+
+                submitButton.innerHTML =
+                    "⏳ Checking Answers...";
+
+
+            }
+
+
+        }
+    );
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

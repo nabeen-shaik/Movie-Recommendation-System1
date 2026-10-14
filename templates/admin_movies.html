@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movies Management - MovieRecommender</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #20242c;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 235px;
+            background: #ffffff;
+            border-right: 1px solid #e5e8ef;
+            padding: 22px 15px;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 10px 25px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: #7057d9;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        .brand h2 {
+            font-size: 15px;
+            color: #272b34;
+        }
+
+        .brand h2 span {
+            color: #7057d9;
+        }
+
+        .brand p {
+            margin-top: 3px;
+            color: #9aa1ad;
+            font-size: 8px;
+        }
+
+        .menu-title {
+            margin: 27px 10px 10px;
+            color: #a0a6b1;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 12px;
+            margin-bottom: 4px;
+            border-radius: 7px;
+            color: #606773;
+            text-decoration: none;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #f2efff;
+            color: #7057d9;
+        }
+
+        .menu a.active {
+            background: #eeeaff;
+            color: #7057d9;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 15px;
+            right: 15px;
+        }
+
+        .logout a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 12px;
+            border-radius: 7px;
+            color: #df5a5a;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .logout a:hover {
+            background: #fff0f0;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 235px;
+            min-height: 100vh;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e8ef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .topbar h1 {
+            font-size: 20px;
+        }
+
+        .topbar p {
+            color: #8c939f;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #7057d9;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .admin-name {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .admin-role {
+            color: #9299a5;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 28px 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .page-title h2 {
+            font-size: 22px;
+        }
+
+        .page-title p {
+            color: #8c939f;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .add-btn {
+            border: none;
+            background: #7057d9;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .add-btn:hover {
+            background: #6048c5;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e8ef;
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-card p {
+            color: #858c98;
+            font-size: 10px;
+            margin-bottom: 7px;
+        }
+
+        .stat-card h3 {
+            font-size: 22px;
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 9px;
+            background: #eeeaff;
+            color: #7057d9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        /* ================= MOVIE SECTION ================= */
+
+        .movie-section {
+            background: white;
+            border: 1px solid #e5e8ef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .section-top {
+            padding: 18px 20px;
+            border-bottom: 1px solid #edf0f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .section-top h3 {
+            font-size: 15px;
+        }
+
+        .section-top p {
+            color: #969daa;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-box {
+            width: 280px;
+            height: 36px;
+            display: flex;
+            border: 1px solid #dfe3ea;
+            border-radius: 6px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0 12px;
+            font-size: 11px;
+            color: #333;
+        }
+
+        .search-box button {
+            width: 45px;
+            border: none;
+            background: #f1efff;
+            color: #7057d9;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px 20px;
+            background: #fafbfc;
+            color: #8a919d;
+            font-size: 9px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 20px;
+            border-top: 1px solid #f0f2f5;
+            font-size: 11px;
+            color: #4e5560;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #fcfcff;
+        }
+
+        .movie-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 220px;
+        }
+
+        .poster {
+            width: 45px;
+            height: 60px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: #eef0f5;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #7057d9;
+        }
+
+        .poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .movie-name {
+            color: #30353e;
+            font-weight: 600;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .movie-id {
+            color: #9aa1ad;
+            font-size: 8px;
+            margin-top: 4px;
+        }
+
+        .genre {
+            color: #666e7a;
+            max-width: 180px;
+            line-height: 1.5;
+        }
+
+        .rating {
+            color: #7057d9;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .star {
+            color: #f0b429;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #e9f8ef;
+            color: #2e9b5b;
+            font-size: 9px;
+            white-space: nowrap;
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #f1efff;
+            color: #7057d9;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #e5e0ff;
+        }
+
+        .action-btn.delete {
+            background: #fff0f0;
+            color: #df5a5a;
+        }
+
+        .action-btn.delete:hover {
+            background: #ffe0e0;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #9299a5;
+            font-size: 12px;
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #9aa1ad;
+            font-size: 9px;
+            padding: 25px;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            background: rgba(20, 24, 35, 0.55);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 460px;
+            max-width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #edf0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-size: 17px;
+        }
+
+        .close-btn {
+            border: none;
+            background: #f2f3f6;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            color: #555d69;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 38px;
+            border: 1px solid #dfe3ea;
+            border-radius: 6px;
+            padding: 0 11px;
+            outline: none;
+            font-size: 11px;
+        }
+
+        .form-group input:focus {
+            border-color: #7057d9;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #edf0f5;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .cancel-btn {
+            border: 1px solid #dfe3ea;
+            background: white;
+            color: #555d69;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .cancel-btn:hover {
+            background: #f5f6f8;
+        }
+
+        .save-btn {
+            border: none;
+            background: #7057d9;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .save-btn:hover {
+            background: #6048c5;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 1000px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media(max-width: 750px) {
+
+            .sidebar {
+                width: 65px;
+                padding: 15px 8px;
+            }
+
+            .brand-text,
+            .menu-title,
+            .menu a span,
+            .logout span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+                padding: 0 0 20px;
+            }
+
+            .menu a {
+                justify-content: center;
+                padding: 12px 5px;
+            }
+
+            .logout a {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 65px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .admin-name,
+            .admin-role {
+                display: none;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-top {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🎬
+            </div>
+
+            <div class="brand-text">
+
+                <h2>
+                    Movie<span>Recommender</span>
+                </h2>
+
+                <p>
+                    ADMIN PANEL
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="menu-title">
+            Main Menu
+        </div>
+
+
+        <div class="menu">
+
+            <a href="/admin/dashboard">
+                <div class="menu-icon">📊</div>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/admin/movies" class="active">
+                <div class="menu-icon">🎬</div>
+                <span>Movies</span>
+            </a>
+
+            <a href="{{ url_for('admin_users') }}">
+                <div class="menu-icon">👥</div>
+                <span>Users</span>
+            </a>
+
+            <a href="{{ url_for('admin_ratings') }}">
+                <div class="menu-icon">⭐</div>
+                <span>Ratings</span>
+            </a>
+
+            <a href="{{ url_for('admin_discussions') }}">
+                <div class="menu-icon">💬</div>
+                <span>Discussions</span>
+            </a>
+
+        </div>
+
+
+        <div class="menu-title">
+            Management
+        </div>
+
+
+        <div class="menu">
+
+            <a href="{{ url_for('admin_datasets') }}">
+                <div class="menu-icon">🗂️</div>
+                <span>Datasets</span>
+            </a>
+
+            <a href="#">
+                <div class="menu-icon">🤖</div>
+                <span>AI Features</span>
+            </a>
+
+            
+
+        </div>
+
+
+        <div class="logout">
+
+            <a href="/admin/logout">
+                <div class="menu-icon">🚪</div>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="main">
+
+
+        <!-- ================= TOPBAR ================= -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Movies Management
+                </h1>
+
+                <p>
+                    Manage movies available in the recommendation system.
+                </p>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <div class="admin-name">
+                        Admin
+                    </div>
+
+                    <div class="admin-role">
+                        Administrator
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <main class="content">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-header">
+
+                <div class="page-title">
+
+                    <h2>
+                        Movie Library
+                    </h2>
+
+                    <p>
+                        View and manage movies in your dataset.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="openAddModal()"
+                >
+                    + Add New Movie
+                </button>
+
+            </div>
+
+
+            <!-- ================= STATS ================= -->
+
+            <section class="stats">
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <p>
+                            TOTAL MOVIES
+                        </p>
+
+                        <h3 id="totalMovies">
+                            {{ total_movies }}
+                        </h3>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        🎬
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <p>
+                            ACTIVE MOVIES
+                        </p>
+
+                        <h3 id="activeMovies">
+                            {{ total_movies }}
+                        </h3>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        ✅
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <p>
+                            DATASET STATUS
+                        </p>
+
+                        <h3>
+                            Ready
+                        </h3>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        🗂️
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= MOVIE TABLE ================= -->
+
+            <section class="movie-section">
+
+
+                <div class="section-top">
+
+                    <div>
+
+                        <h3>
+                            All Movies
+                        </h3>
+
+                        <p>
+                            Movies loaded from the recommendation dataset.
+                        </p>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        <input
+                            type="text"
+                            id="movieSearch"
+                            placeholder="Search movie..."
+                            onkeyup="searchMovies()"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="searchMovies()"
+                        >
+                            🔍
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>MOVIE</th>
+                                <th>GENRE</th>
+                                <th>RATING</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="movieTable">
+
+                        {% if movies %}
+
+                            {% for movie in movies %}
+
+                            <tr
+                                class="movie-row"
+                                data-index="{{ movie.index }}"
+                            >
+
+                                <td>
+
+                                    <div class="movie-cell">
+
+                                        <div class="poster">
+
+                                            {% if movie.poster_url %}
+
+                                                <img
+                                                    src="{{ movie.poster_url }}"
+                                                    alt="{{ movie.title }}"
+                                                    onerror="this.style.display='none'; this.parentElement.innerHTML='🎬';"
+                                                >
+
+                                            {% else %}
+
+                                                🎬
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <div class="movie-name">
+                                                {{ movie.title }}
+                                            </div>
+
+                                            <div class="movie-id">
+                                                Movie ID #{{ loop.index }}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="genre">
+
+                                        {% if movie.genres %}
+                                            {{ movie.genres }}
+                                        {% else %}
+                                            Not Available
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="rating">
+
+                                        <span class="star">★</span>
+
+                                        {{ movie.rating|default("N/A") }}
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="status">
+                                        Active
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <!-- EDIT BUTTON -->
+
+                                        <button
+                                            type="button"
+                                            class="action-btn"
+                                            title="Edit Movie"
+                                            data-index="{{ movie.index }}"
+                                            onclick="editMovie(this)"
+                                        >
+                                            ✏️
+                                        </button>
+
+
+                                        <!-- DELETE BUTTON -->
+
+                                        <button
+                                            type="button"
+                                            class="action-btn delete"
+                                            title="Delete Movie"
+                                            data-index="{{ movie.index }}"
+                                            onclick="deleteMovie(this)"
+                                        >
+                                            🗑️
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="5" class="empty">
+
+                                    <div class="empty-icon">
+                                        🎬
+                                    </div>
+
+                                    No movies available.
+
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <div class="footer">
+                Movie Recommendation System © 2026
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADD / EDIT MOVIE MODAL
+    ===================================================== -->
+
+    <div
+        class="modal"
+        id="movieModal"
+    >
+
+        <div class="modal-box">
+
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">
+                    Add New Movie
+                </h2>
+
+
+                <button
+                    type="button"
+                    class="close-btn"
+                    onclick="closeModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Movie Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="movieTitle"
+                        placeholder="Enter movie title"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Genre
+                    </label>
+
+                    <input
+                        type="text"
+                        id="movieGenre"
+                        placeholder="Example: Action, Drama"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Rating
+                    </label>
+
+                    <input
+                        type="number"
+                        id="movieRating"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        placeholder="Example: 8.5"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Poster URL
+                    </label>
+
+                    <input
+                        type="text"
+                        id="moviePoster"
+                        placeholder="https://image.tmdb.org/..."
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- MODAL BUTTONS -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    class="save-btn"
+                    onclick="saveMovie()"
+                >
+                    Save Movie
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+    let editRow = null;
+    let editMovieIndex = null;
+
+
+    /* =====================================================
+       OPEN ADD MODAL
+    ===================================================== */
+
+    function openAddModal() {
+
+        editRow = null;
+        editMovieIndex = null;
+
+        document.getElementById("modalTitle").textContent =
+            "Add New Movie";
+
+        document.getElementById("movieTitle").value = "";
+
+        document.getElementById("movieGenre").value = "";
+
+        document.getElementById("movieRating").value = "";
+
+        document.getElementById("moviePoster").value = "";
+
+        document
+            .getElementById("movieModal")
+            .classList.add("show");
+
+    }
+
+
+    /* =====================================================
+       CLOSE MODAL
+    ===================================================== */
+
+    function closeModal() {
+
+        document
+            .getElementById("movieModal")
+            .classList.remove("show");
+
+        editRow = null;
+        editMovieIndex = null;
+
+    }
+
+
+    /* =====================================================
+       EDIT MOVIE
+    ===================================================== */
+
+    function editMovie(button) {
+
+        editRow = button.closest(".movie-row");
+
+        if (!editRow) {
+
+            alert("Movie row not found.");
+
+            return;
+
+        }
+
+
+        /*
+         * IMPORTANT:
+         * Get original pandas DataFrame index
+         */
+
+        editMovieIndex =
+            button.getAttribute("data-index");
+
+
+        if (
+            editMovieIndex === null ||
+            editMovieIndex === ""
+        ) {
+
+            alert("Movie index not found.");
+
+            return;
+
+        }
+
+
+        const titleElement =
+            editRow.querySelector(".movie-name");
+
+
+        const genreElement =
+            editRow.querySelector(".genre");
+
+
+        const ratingElement =
+            editRow.querySelector(".rating");
+
+
+        const posterImage =
+            editRow.querySelector(".poster img");
+
+
+        const title =
+            titleElement
+            ? titleElement.textContent.trim()
+            : "";
+
+
+        const genre =
+            genreElement
+            ? genreElement.textContent.trim()
+            : "";
+
+
+        let rating = "";
+
+
+        if (ratingElement) {
+
+            rating =
+                ratingElement.textContent
+                .replace("★", "")
+                .trim();
+
+        }
+
+
+        let poster = "";
+
+
+        if (posterImage) {
+
+            poster = posterImage.src;
+
+        }
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent =
+                "Edit Movie";
+
+
+        document
+            .getElementById("movieTitle")
+            .value =
+                title;
+
+
+        document
+            .getElementById("movieGenre")
+            .value =
+                genre === "Not Available"
+                ? ""
+                : genre;
+
+
+        document
+            .getElementById("movieRating")
+            .value =
+                rating === "N/A"
+                ? ""
+                : rating;
+
+
+        document
+            .getElementById("moviePoster")
+            .value =
+                poster;
+
+
+        document
+            .getElementById("movieModal")
+            .classList.add("show");
+
+    }
+
+
+    /* =====================================================
+       SAVE MOVIE
+       CONNECTS FRONTEND TO FLASK BACKEND
+    ===================================================== */
+
+    function saveMovie() {
+
+        const title =
+            document
+            .getElementById("movieTitle")
+            .value
+            .trim();
+
+
+        const genre =
+            document
+            .getElementById("movieGenre")
+            .value
+            .trim();
+
+
+        const rating =
+            document
+            .getElementById("movieRating")
+            .value
+            .trim();
+
+
+        const poster =
+            document
+            .getElementById("moviePoster")
+            .value
+            .trim();
+
+
+        /* =================================================
+           VALIDATE TITLE
+        ================================================= */
+
+        if (title === "") {
+
+            alert("Please enter Movie Title.");
+
+            document
+                .getElementById("movieTitle")
+                .focus();
+
+            return;
+
+        }
+
+
+        /* =================================================
+           EDIT EXISTING MOVIE
+        ================================================= */
+
+        if (
+            editMovieIndex !== null &&
+            editMovieIndex !== ""
+        ) {
+
+
+            const form =
+                document.createElement("form");
+
+
+            form.method = "POST";
+
+
+            form.action =
+                "/admin/movies/edit/"
+                + editMovieIndex;
+
+
+            /*
+             * TITLE
+             */
+
+            const titleInput =
+                document.createElement("input");
+
+            titleInput.type = "hidden";
+
+            titleInput.name = "title";
+
+            titleInput.value = title;
+
+
+            /*
+             * GENRES
+             */
+
+            const genreInput =
+                document.createElement("input");
+
+            genreInput.type = "hidden";
+
+            genreInput.name = "genres";
+
+            genreInput.value = genre;
+
+
+            /*
+             * RATING
+             */
+
+            const ratingInput =
+                document.createElement("input");
+
+            ratingInput.type = "hidden";
+
+            ratingInput.name = "rating";
+
+            ratingInput.value = rating;
+
+
+            /*
+             * POSTER
+             */
+
+            const posterInput =
+                document.createElement("input");
+
+            posterInput.type = "hidden";
+
+            posterInput.name = "poster_url";
+
+            posterInput.value = poster;
+
+
+            /*
+             * OVERVIEW
+             *
+             * Current modal does not edit overview.
+             * Send empty value for now.
+             */
+
+            const overviewInput =
+                document.createElement("input");
+
+            overviewInput.type = "hidden";
+
+            overviewInput.name = "overview";
+
+            overviewInput.value = "";
+
+
+            form.appendChild(titleInput);
+
+            form.appendChild(genreInput);
+
+            form.appendChild(ratingInput);
+
+            form.appendChild(posterInput);
+
+            form.appendChild(overviewInput);
+
+
+            document.body.appendChild(form);
+
+
+            /*
+             * SEND TO FLASK
+             */
+
+            form.submit();
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           ADD NEW MOVIE
+        ================================================= */
+
+
+        const form =
+            document.createElement("form");
+
+
+        form.method = "POST";
+
+
+        form.action =
+            "/admin/movies/add";
+
+
+        /*
+         * TITLE
+         */
+
+        const titleInput =
+            document.createElement("input");
+
+        titleInput.type = "hidden";
+
+        titleInput.name = "title";
+
+        titleInput.value = title;
+
+
+        /*
+         * GENRES
+         */
+
+        const genreInput =
+            document.createElement("input");
+
+        genreInput.type = "hidden";
+
+        genreInput.name = "genres";
+
+        genreInput.value = genre;
+
+
+        /*
+         * RATING
+         */
+
+        const ratingInput =
+            document.createElement("input");
+
+        ratingInput.type = "hidden";
+
+        ratingInput.name = "rating";
+
+        ratingInput.value = rating;
+
+
+        /*
+         * POSTER
+         */
+
+        const posterInput =
+            document.createElement("input");
+
+        posterInput.type = "hidden";
+
+        posterInput.name = "poster_url";
+
+        posterInput.value = poster;
+
+
+        /*
+         * OVERVIEW
+         */
+
+        const overviewInput =
+            document.createElement("input");
+
+        overviewInput.type = "hidden";
+
+        overviewInput.name = "overview";
+
+        overviewInput.value = "";
+
+
+        form.appendChild(titleInput);
+
+        form.appendChild(genreInput);
+
+        form.appendChild(ratingInput);
+
+        form.appendChild(posterInput);
+
+        form.appendChild(overviewInput);
+
+
+        document.body.appendChild(form);
+
+
+        /*
+         * SEND TO FLASK
+         */
+
+        form.submit();
+
+    }
+
+
+    /* =====================================================
+       DELETE MOVIE
+       CONNECTS TO FLASK BACKEND
+    ===================================================== */
+
+    function deleteMovie(button) {
+
+        const row =
+            button.closest(".movie-row");
+
+
+        if (!row) {
+
+            return;
+
+        }
+
+
+        const movieIndex =
+            button.getAttribute("data-index");
+
+
+        if (
+            movieIndex === null ||
+            movieIndex === ""
+        ) {
+
+            alert("Movie index not found.");
+
+            return;
+
+        }
+
+
+        const titleElement =
+            row.querySelector(".movie-name");
+
+
+        const title =
+            titleElement
+            ? titleElement.textContent.trim()
+            : "this movie";
+
+
+        const confirmation =
+            confirm(
+                "Are you sure you want to delete:\n\n"
+                + title
+                + "?"
+            );
+
+
+        if (!confirmation) {
+
+            return;
+
+        }
+
+
+        /*
+         * CREATE DELETE FORM
+         */
+
+        const form =
+            document.createElement("form");
+
+
+        form.method = "POST";
+
+
+        form.action =
+            "/admin/movies/delete/"
+            + movieIndex;
+
+
+        document.body.appendChild(form);
+
+
+        /*
+         * SEND TO FLASK
+         */
+
+        form.submit();
+
+    }
+
+
+    /* =====================================================
+       SEARCH MOVIES
+    ===================================================== */
+
+    function searchMovies() {
+
+        const input =
+            document
+            .getElementById("movieSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+        const rows =
+            document.querySelectorAll(
+                ".movie-row"
+            );
+
+
+        rows.forEach(function(row) {
+
+            const text =
+                row.textContent.toLowerCase();
+
+
+            if (text.includes(input)) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       CLICK OUTSIDE MODAL
+    ===================================================== */
+
+    document
+        .getElementById("movieModal")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === this) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+       ESC KEY
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+    </script>
+
+
+</body>
+
+</html>

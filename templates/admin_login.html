@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - MovieRecommender</title>
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        /* =====================================================
+           BODY + SAME MOVIE BACKGROUND
+        ===================================================== */
+
+        body {
+
+            min-height: 100vh;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+
+            position: relative;
+
+            overflow-x: hidden;
+
+            background:
+
+                linear-gradient(
+                    rgba(2, 4, 15, 0.28),
+                    rgba(2, 4, 15, 0.38)
+                ),
+
+                url("{{ url_for('static', filename='images/auth-bg.png') }}");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-repeat: no-repeat;
+
+            background-attachment: fixed;
+        }
+
+
+        /* =====================================================
+           SOFT CINEMATIC OVERLAY
+        ===================================================== */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+
+                radial-gradient(
+                    circle at center,
+                    transparent 25%,
+                    rgba(0, 0, 0, 0.18) 100%
+                );
+
+            pointer-events: none;
+
+            z-index: 0;
+        }
+
+
+        /* =====================================================
+           ADMIN LOGIN CARD
+        ===================================================== */
+
+        .login-container {
+
+            width: 100%;
+
+            max-width: 500px;
+
+            padding: 30px 38px 28px;
+
+            position: relative;
+
+            z-index: 2;
+
+            background:
+                rgba(4, 12, 27, 0.30);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
+            border-radius: 16px;
+
+            backdrop-filter: blur(2px);
+
+            -webkit-backdrop-filter: blur(2px);
+
+            box-shadow:
+
+                0 25px 70px
+                rgba(0, 0, 0, 0.38),
+
+                0 0 35px
+                rgba(87, 55, 180, 0.08);
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .logo-image {
+
+            width: 58px;
+
+            height: 58px;
+
+            margin:
+                0 auto 12px;
+
+            display: block;
+
+            object-fit: contain;
+
+            border-radius: 14px;
+
+            filter:
+                drop-shadow(
+                    0 7px 18px
+                    rgba(112, 72, 220, 0.35)
+                );
+        }
+
+
+        .logo h1 {
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            color: white;
+
+            line-height: 1.1;
+        }
+
+
+        .logo h1 span {
+
+            color: #9b52ff;
+
+            text-shadow:
+                0 0 18px
+                rgba(155, 82, 255, 0.25);
+        }
+
+
+        .logo p {
+
+            margin-top: 7px;
+
+            color: #aeb9ca;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           LOGIN TITLE
+        ===================================================== */
+
+        .login-title {
+
+            margin-bottom: 21px;
+        }
+
+
+        .login-title h2 {
+
+            font-size: 23px;
+
+            margin-bottom: 6px;
+
+            color: white;
+        }
+
+
+        .login-title p {
+
+            color: #aeb9ca;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .error {
+
+            margin-bottom: 15px;
+
+            padding:
+                10px 12px;
+
+            border-radius: 7px;
+
+            background:
+                rgba(239, 68, 68, 0.12);
+
+            border:
+                1px solid
+                rgba(239, 68, 68, 0.35);
+
+            color: #ff9aa8;
+
+            font-size: 13px;
+
+            text-align: center;
+        }
+
+
+        /* =====================================================
+           FORM GROUP
+        ===================================================== */
+
+        .form-group {
+
+            margin-bottom: 15px;
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 13px;
+
+            color: #e0e5ee;
+
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           INPUT
+        ===================================================== */
+
+        .form-group input {
+
+            width: 100%;
+
+            height: 48px;
+
+            padding:
+                0 15px;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.40);
+
+            border-radius: 8px;
+
+            outline: none;
+
+            background:
+                rgba(5, 18, 35, 0.63);
+
+            color: white;
+
+            font-size: 14px;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .form-group input::placeholder {
+
+            color: #8492a8;
+        }
+
+
+        .form-group input:hover {
+
+            border-color:
+                rgba(139, 92, 246, 0.55);
+        }
+
+
+        .form-group input:focus {
+
+            border-color:
+                #8b5cf6;
+
+            background:
+                rgba(7, 21, 40, 0.76);
+
+            box-shadow:
+
+                0 0 0 2px
+                rgba(139, 92, 246, 0.12),
+
+                0 0 15px
+                rgba(139, 92, 246, 0.08);
+        }
+
+
+        /* =====================================================
+           PASSWORD BOX
+        ===================================================== */
+
+        .password-box {
+
+            position: relative;
+        }
+
+
+        .password-box input {
+
+            padding-right: 48px;
+        }
+
+
+        /* =====================================================
+           SHOW PASSWORD
+        ===================================================== */
+
+        .show-password {
+
+            position: absolute;
+
+            right: 14px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            cursor: pointer;
+
+            color: #8995aa;
+
+            font-size: 16px;
+
+            transition: 0.2s;
+
+            user-select: none;
+        }
+
+
+        .show-password:hover {
+
+            color: #b99aff;
+
+            transform:
+                translateY(-50%)
+                scale(1.08);
+        }
+
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
+
+        .login-btn {
+
+            width: 100%;
+
+            height: 49px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #7048dc,
+                    #8455ec
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 3px;
+
+            transition:
+                0.2s ease;
+
+            box-shadow:
+
+                0 7px 22px
+                rgba(112, 72, 220, 0.25);
+        }
+
+
+        .login-btn:hover {
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #7b50e7,
+                    #915ff5
+                );
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+
+                0 10px 27px
+                rgba(112, 72, 220, 0.35);
+        }
+
+
+        .login-btn:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =====================================================
+           BACK HOME
+        ===================================================== */
+
+        .back-home {
+
+            text-align: center;
+
+            margin-top: 18px;
+        }
+
+
+        .back-home a {
+
+            color: #a78bfa;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+
+        .back-home a:hover {
+
+            color: #c4b5fd;
+
+            text-decoration: underline;
+        }
+
+
+        /* =====================================================
+           ADMIN BADGE
+        ===================================================== */
+
+        .admin-badge {
+
+            display: inline-block;
+
+            margin-top: 13px;
+
+            padding:
+                5px 12px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(139, 82, 237, 0.12);
+
+            border:
+                1px solid
+                rgba(139, 82, 237, 0.30);
+
+            color: #b18aff;
+
+            font-size: 10px;
+
+            box-shadow:
+                0 0 15px
+                rgba(139, 82, 237, 0.05);
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 18px;
+
+                background-attachment:
+                    scroll;
+            }
+
+
+            .login-container {
+
+                max-width: 100%;
+
+                padding:
+                    28px 24px;
+
+                background:
+                    rgba(4, 12, 27, 0.38);
+            }
+
+
+            .logo-image {
+
+                width: 54px;
+
+                height: 54px;
+            }
+
+
+            .logo h1 {
+
+                font-size: 23px;
+            }
+
+
+            .login-title h2 {
+
+                font-size: 21px;
+            }
+        }
+
+
+        /* =====================================================
+           SMALL MOBILE
+        ===================================================== */
+
+        @media (max-width: 420px) {
+
+            body {
+
+                padding: 10px;
+            }
+
+
+            .login-container {
+
+                padding:
+                    25px 18px;
+            }
+
+
+            .logo-image {
+
+                width: 50px;
+
+                height: 50px;
+            }
+
+
+            .logo h1 {
+
+                font-size: 21px;
+            }
+
+
+            .form-group input {
+
+                height: 46px;
+
+                font-size: 13px;
+            }
+
+
+            .login-btn {
+
+                height: 47px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================================
+         ADMIN LOGIN CARD
+    ================================================= -->
+
+    <div class="login-container">
+
+
+        <!-- =================================================
+             LOGO
+        ================================================= -->
+
+        <div class="logo">
+
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender Logo"
+                class="logo-image"
+            >
+
+
+            <h1>
+
+                Movie<span>Recommender</span>
+
+            </h1>
+
+
+            <p>
+
+                Discover. Recommend. Enjoy.
+
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             TITLE
+        ================================================= -->
+
+        <div class="login-title">
+
+            <h2>
+                Admin Login
+            </h2>
+
+
+            <p>
+                Sign in to access the administration panel
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             ERROR
+        ================================================= -->
+
+        {% if error %}
+
+        <div class="error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             FORM
+        ================================================= -->
+
+        <form method="POST">
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter admin username"
+                    required
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+
+                <div class="password-box">
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter admin password"
+                        required
+                        autocomplete="current-password"
+                    >
+
+
+                    <span
+                        class="show-password"
+                        onclick="togglePassword()"
+                        title="Show / Hide Password"
+                    >
+                        👁
+                    </span>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-btn"
+            >
+
+                Login as Admin
+
+            </button>
+
+
+        </form>
+
+
+        <!-- =================================================
+             BACK HOME
+        ================================================= -->
+
+        <div class="back-home">
+
+
+            <a href="/">
+
+                ← Back to MovieRecommender
+
+            </a>
+
+
+            <br>
+
+
+            <span class="admin-badge">
+
+                🔐 Administrator Access
+
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =================================================
+         PASSWORD SCRIPT
+    ================================================= -->
+
+    <script>
+
+        function togglePassword() {
+
+            const password =
+                document.getElementById("password");
+
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+            } else {
+
+                password.type = "password";
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

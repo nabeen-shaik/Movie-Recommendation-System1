@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Notes</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px 20px;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .back {
+            text-decoration: none;
+            color: white;
+            background: #334155;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        .note-form {
+            background: #1e293b;
+            padding: 22px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #334155;
+            color: white;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 11px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .notes {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .note {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .movie-title {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .note-text {
+            color: #cbd5e1;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .date {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top">
+
+        <h1>📝 My Notes</h1>
+
+        <a href="{{ url_for('student_mode') }}" class="back">
+            ← Back to Student Mode
+        </a>
+
+    </div>
+
+
+    <!-- ADD NOTE -->
+
+    <div class="note-form">
+
+        <form method="POST"
+              action="{{ url_for('student_notes') }}">
+
+            <label>Movie Name</label>
+
+            <input
+                type="text"
+                name="movie_title"
+                value="{{ movie_title or '' }}"
+                placeholder="Enter movie name"
+                required
+            >
+
+
+            <label>Your Note</label>
+
+            <textarea
+                name="note"
+                placeholder="Write your learning notes here..."
+                required
+            ></textarea>
+
+
+            <button type="submit">
+                💾 Save Note
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- SAVED NOTES -->
+
+    {% if student_notes %}
+
+    <div class="notes">
+
+        {% for note in student_notes %}
+
+        <div class="note">
+
+            <div class="movie-title">
+                🎬 {{ note.movie_title }}
+            </div>
+
+            <div class="note-text">
+                {{ note.note }}
+            </div>
+
+            <div class="date">
+                {{ note.updated_at }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+
+        <h2>📝 No Notes Yet</h2>
+
+        <p>
+            Add your first movie learning note above.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

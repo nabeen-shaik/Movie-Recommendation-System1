@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Movie Learning Assistant - MovieRecommender</title>
+
+<style>
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #020814;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+
+.navbar {
+    height: 64px;
+    width: 100%;
+    background: #050b18;
+    border-bottom: 1px solid #17243a;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 22px;
+}
+
+.logo {
+    width: 235px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.logo-title {
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.logo-title span {
+    color: #9b52ff;
+}
+
+
+/* ============================================================
+   NAV LINKS
+============================================================ */
+
+.nav-links {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #d5d9e2;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    padding: 22px 0;
+
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #9b52ff;
+}
+
+.nav-links a:nth-child(3) {
+    color: #9b52ff;
+}
+
+
+/* ============================================================
+   NAV RIGHT
+============================================================ */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-btn,
+.profile-btn {
+    background: #7949e8;
+    color: #ffffff;
+
+    border: none;
+    text-decoration: none;
+
+    padding: 9px 18px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.register-btn {
+    color: #ffffff;
+    text-decoration: none;
+
+    border: 1px solid #7949e8;
+
+    padding: 8px 16px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+.logout-btn {
+    color: #ff9aa8;
+    text-decoration: none;
+
+    border: 1px solid #71303d;
+
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+.welcome-user {
+    color: #d5d9e2;
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+.page {
+    max-width: 1400px;
+    margin: auto;
+    padding: 30px 20px 60px;
+}
+
+.assistant-layout {
+    display: grid;
+
+    grid-template-columns:
+        250px
+        minmax(0, 1fr)
+        270px;
+
+    gap: 14px;
+
+    align-items: start;
+}
+
+
+/* ============================================================
+   COMMON CARD
+============================================================ */
+
+.card {
+    background:
+        linear-gradient(
+            145deg,
+            #071120,
+            #09162a
+        );
+
+    border: 1px solid #1b2b40;
+    border-radius: 9px;
+}
+
+
+/* ============================================================
+   LEFT PANEL
+============================================================ */
+
+.left-panel {
+    padding: 15px;
+
+    position: sticky;
+    top: 20px;
+}
+
+.assistant-heading {
+    padding: 14px;
+    margin-bottom: 15px;
+
+    background: #050d1a;
+
+    border: 1px solid #172a43;
+    border-radius: 8px;
+}
+
+.assistant-heading h2 {
+    font-size: 15px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.assistant-heading h2 span {
+    color: #9b52ff;
+}
+
+.assistant-heading p {
+    color: #8793a6;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   STEP TITLE
+============================================================ */
+
+.step-title {
+    color: #dce2ed;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    margin: 15px 0 8px;
+}
+
+
+/* ============================================================
+   MOVIE INPUT
+============================================================ */
+
+.movie-input {
+    width: 100%;
+
+    background: #020814;
+
+    border: 1px solid #263650;
+
+    color: #ffffff;
+
+    outline: none;
+
+    border-radius: 6px;
+
+    padding: 11px;
+
+    font-size: 12px;
+}
+
+.movie-input:focus {
+    border-color: #8952ed;
+
+    box-shadow:
+        0 0 0 2px rgba(137,82,237,0.10);
+}
+
+
+/* ============================================================
+   TOPIC LIST
+============================================================ */
+
+.topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+
+/* ============================================================
+   TOPIC BUTTON
+============================================================ */
+
+.topic-btn {
+    width: 100%;
+
+    background: #071120;
+
+    border: 1px solid #263650;
+
+    color: #cbd3df;
+
+    border-radius: 6px;
+
+    padding: 10px;
+
+    text-align: left;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition: all 0.2s;
+}
+
+.topic-btn:hover {
+    border-color: #8952ed;
+
+    color: #ffffff;
+
+    background: #0b172a;
+
+    transform: translateX(2px);
+}
+
+.topic-btn.active {
+    border-color: #9b52ff;
+
+    background: rgba(155,82,255,0.16);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 0 0 1px rgba(155,82,255,0.15);
+}
+
+
+/* ============================================================
+   GENERATE BUTTON
+============================================================ */
+
+.generate-btn {
+    width: 100%;
+
+    border: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7547d9,
+            #9b52ff
+        );
+
+    color: #ffffff;
+
+    padding: 12px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    margin-top: 16px;
+
+    transition: 0.2s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(139,92,246,0.25);
+}
+
+
+/* ============================================================
+   CENTER
+============================================================ */
+
+.center-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* ============================================================
+   MOVIE HEADER
+============================================================ */
+
+.movie-header {
+    min-height: 180px;
+
+    padding: 15px;
+
+    display: flex;
+
+    gap: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #071120,
+            #09162a
+        );
+
+    border: 1px solid #1b2b40;
+
+    border-radius: 9px;
+}
+
+
+/* ============================================================
+   POSTER
+============================================================ */
+
+.movie-poster {
+    width: 130px;
+    height: 160px;
+
+    flex-shrink: 0;
+
+    background: #050d1a;
+
+    border-radius: 7px;
+
+    overflow: hidden;
+
+    border: 1px solid #263650;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.movie-poster img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+.poster-placeholder {
+    text-align: center;
+
+    color: #68758a;
+
+    font-size: 11px;
+
+    padding: 10px;
+}
+
+
+/* ============================================================
+   MOVIE DETAILS
+============================================================ */
+
+.movie-details {
+    flex: 1;
+    padding-top: 5px;
+}
+
+.movie-details h1 {
+    font-size: 24px;
+
+    margin-bottom: 10px;
+
+    color: #ffffff;
+}
+
+.movie-details h1 span {
+    color: #9b52ff;
+}
+
+.movie-tags {
+    display: flex;
+
+    gap: 7px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 12px;
+}
+
+.movie-tag {
+    background: #0c1930;
+
+    border: 1px solid #263650;
+
+    color: #aeb8c9;
+
+    padding: 5px 8px;
+
+    border-radius: 5px;
+
+    font-size: 10px;
+}
+
+.movie-description {
+    color: #aeb8c9;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   CONTENT CARD
+============================================================ */
+
+.content-card {
+    background: #071120;
+
+    border: 1px solid #1b2b40;
+
+    border-radius: 9px;
+
+    padding: 17px;
+}
+
+.content-title {
+    font-size: 14px;
+
+    color: #ffffff;
+
+    margin-bottom: 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.content-title .icon {
+    color: #9b52ff;
+}
+
+
+/* ============================================================
+   ANSWER
+============================================================ */
+
+.answer-box {
+    background: #050d1a;
+
+    border: 1px solid #263650;
+
+    border-radius: 7px;
+
+    padding: 15px;
+}
+
+.answer-title {
+    color: #9b52ff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}
+
+.answer-text {
+    color: #dce2ed;
+
+    font-size: 12px;
+
+    line-height: 1.9;
+
+    white-space: pre-line;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state {
+    padding: 30px;
+
+    text-align: center;
+
+    color: #8793a6;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   KEY LEARNINGS
+============================================================ */
+
+.learning-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+}
+
+.learning-item {
+    background: #050d1a;
+
+    border: 1px solid #263650;
+
+    border-radius: 6px;
+
+    padding: 12px;
+
+    color: #bfc9d8;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+.learning-item strong {
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    margin-bottom: 5px;
+}
+
+
+/* ============================================================
+   REAL WORLD
+============================================================ */
+
+.real-world {
+    color: #aeb8c9;
+
+    font-size: 11px;
+
+    line-height: 1.8;
+
+    background: #050d1a;
+
+    border: 1px solid #263650;
+
+    border-radius: 6px;
+
+    padding: 12px;
+}
+
+
+/* ============================================================
+   RIGHT PANEL
+============================================================ */
+
+.right-panel {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    position: sticky;
+
+    top: 20px;
+}
+
+
+/* ============================================================
+   RIGHT CARD
+============================================================ */
+
+.right-card {
+    padding: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #071120,
+            #09162a
+        );
+
+    border: 1px solid #1b2b40;
+
+    border-radius: 9px;
+}
+
+.right-title {
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}
+
+
+/* ============================================================
+   TAKEAWAYS
+============================================================ */
+
+.takeaway {
+    display: flex;
+
+    gap: 8px;
+
+    margin-bottom: 11px;
+
+    color: #aeb8c9;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+.takeaway:last-child {
+    margin-bottom: 0;
+}
+
+.takeaway-icon {
+    color: #9b52ff;
+
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   EXPLORE
+============================================================ */
+
+.explore-item {
+    display: flex;
+
+    gap: 9px;
+
+    align-items: center;
+
+    padding: 9px;
+
+    background: #050d1a;
+
+    border: 1px solid #263650;
+
+    border-radius: 6px;
+
+    margin-bottom: 7px;
+}
+
+.explore-item:last-child {
+    margin-bottom: 0;
+}
+
+.explore-icon {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 5px;
+
+    background: #101d32;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+
+    flex-shrink: 0;
+}
+
+.explore-text {
+    color: #cbd3df;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   ASK AI
+============================================================ */
+
+.ask-card {
+    border-color: #8952ed;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0b1328,
+            #10152d
+        );
+}
+
+.ask-card p {
+    color: #8793a6;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+    margin-bottom: 10px;
+}
+
+.ask-form {
+    display: flex;
+    gap: 6px;
+}
+
+.ask-form textarea {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 50px;
+
+    resize: none;
+
+    background: #020814;
+
+    border: 1px solid #263650;
+
+    color: #ffffff;
+
+    outline: none;
+
+    border-radius: 5px;
+
+    padding: 9px;
+
+    font-size: 10px;
+}
+
+.ask-form textarea:focus {
+    border-color: #8952ed;
+}
+
+.ask-form button {
+    width: 50px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7547d9,
+            #9b52ff
+        );
+
+    color: #ffffff;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   ERROR
+============================================================ */
+
+.error-box {
+    margin-top: 10px;
+
+    padding: 10px;
+
+    border: 1px solid #71303d;
+
+    background: rgba(113,48,61,0.12);
+
+    border-radius: 6px;
+
+    color: #ff9aa8;
+
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   FOOTER
+============================================================ */
+
+footer {
+    border-top: 1px solid #142238;
+
+    padding: 22px;
+
+    text-align: center;
+
+    color: #5d697a;
+
+    font-size: 11px;
+
+    margin-top: 20px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:1100px) {
+
+    .assistant-layout {
+        grid-template-columns:
+            220px
+            minmax(0, 1fr);
+    }
+
+    .right-panel {
+        grid-column: 1 / -1;
+
+        position: static;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+
+@media(max-width:850px) {
+
+    .navbar {
+        padding: 0 12px;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .logo {
+        width: 180px;
+    }
+
+    .assistant-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .left-panel {
+        position: static;
+    }
+
+    .right-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media(max-width:650px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .logo {
+        flex: 1;
+    }
+
+    .welcome-user {
+        display: none;
+    }
+
+    .page {
+        padding: 20px 12px 40px;
+    }
+
+    .movie-header {
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .movie-tags {
+        justify-content: center;
+    }
+
+    .learning-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender Logo"
+            >
+
+        </div>
+
+        <div class="logo-title">
+
+            Movie<span>Recommender</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/movies">
+            Movies
+        </a>
+
+        <a href="/ai-assistant">
+            AI Assistant
+        </a>
+
+        <a href="/student-mode">
+            Student Mode
+        </a>
+
+        <a href="/discussion">
+            Discussion
+        </a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        {% if user_logged_in %}
+
+            <span class="welcome-user">
+                Hi, {{ user_name }}
+            </span>
+
+            <a
+                href="/profile"
+                class="profile-btn"
+            >
+                Profile
+            </a>
+
+            <a
+                href="/logout"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        {% else %}
+
+            <button
+                class="login-btn"
+                onclick="window.location.href='/login'"
+            >
+                Login
+            </button>
+
+            <a
+                href="/register"
+                class="register-btn"
+            >
+                Register
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
+
+<main class="page">
+
+    <div class="assistant-layout">
+
+
+        <!-- ====================================================
+             LEFT PANEL
+        ==================================================== -->
+
+        <aside class="left-panel card">
+
+            <div class="assistant-heading">
+
+                <h2>
+                    🤖 <span>AI Movie</span> Learning Assistant
+                </h2>
+
+                <p>
+                    Learn from movies.
+                    Grow your knowledge.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="/ai-assistant"
+                id="assistantForm"
+            >
+
+                <!-- MOVIE -->
+
+                <div class="step-title">
+                    1. Select Movie
+                </div>
+
+
+                <input
+                    type="text"
+                    id="movie_name"
+                    name="movie_name"
+                    class="movie-input"
+                    placeholder="Example: Interstellar"
+                    value="{{ movie_name|default('') }}"
+                    required
+                >
+
+
+                <!-- TOPICS -->
+
+                <div class="step-title">
+                    2. Choose Topic
+                </div>
+
+
+                <div class="topic-list">
+
+
+                    <button
+                        type="button"
+                        class="topic-btn"
+                        data-question="What scientific concepts can students learn from this movie?"
+                    >
+                        🔬 Science Concepts
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="topic-btn"
+                        data-question="What life lessons can students learn from this movie?"
+                    >
+                        👤 Life Lessons
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="topic-btn"
+                        data-question="What can students learn from the characters in this movie?"
+                    >
+                        👥 Character Analysis
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="topic-btn"
+                        data-question="What real world concepts can students learn from this movie?"
+                    >
+                        🌐 Real World Connection
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="topic-btn"
+                        data-question="What problem solving skills can students learn from this movie?"
+                    >
+                        💡 Problem Solving
+                    </button>
+
+
+                </div>
+
+
+                <!-- HIDDEN QUESTION -->
+
+                <textarea
+                    id="question"
+                    name="question"
+                    style="display:none;"
+                >{{ question|default('') }}</textarea>
+
+
+                <!-- GENERATE BUTTON -->
+
+                <button
+                    type="submit"
+                    class="generate-btn"
+                >
+                    ✨ Generate Learning Summary
+                </button>
+
+
+            </form>
+
+        </aside>
+
+
+
+        <!-- ====================================================
+             CENTER PANEL
+        ==================================================== -->
+
+        <section class="center-panel">
+
+
+            <!-- =================================================
+                 MOVIE HEADER
+            ================================================= -->
+
+            <div class="movie-header">
+
+
+                <div class="movie-poster">
+
+                    {% if movie and movie.poster_url %}
+
+                        <img
+                            src="{{ movie.poster_url }}"
+                            alt="{{ movie.title }}"
+                        >
+
+                    {% else %}
+
+                        <div class="poster-placeholder">
+
+                            🎬
+
+                            <br><br>
+
+                            {% if movie_name %}
+
+                                Poster not available
+
+                            {% else %}
+
+                                Select a movie
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="movie-details">
+
+
+                    <h1>
+
+                        {% if movie %}
+
+                            {{ movie.title }}
+
+                        {% elif movie_name %}
+
+                            {{ movie_name }}
+
+                        {% else %}
+
+                            <span>AI Movie</span>
+                            Learning Assistant
+
+                        {% endif %}
+
+                    </h1>
+
+
+                    {% if movie %}
+
+                        <div class="movie-tags">
+
+
+                            {% if movie.genres %}
+
+                                {% for genre in movie.genres.split('|') %}
+
+                                    <div class="movie-tag">
+
+                                        🎬 {{ genre }}
+
+                                    </div>
+
+                                {% endfor %}
+
+                            {% endif %}
+
+
+                            {% if movie.year %}
+
+                                <div class="movie-tag">
+
+                                    📅 {{ movie.year }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if movie.rating %}
+
+                                <div class="movie-tag">
+
+                                    ⭐ {{ movie.rating }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="movie-tag">
+
+                                🎓 Learning
+
+                            </div>
+
+
+                            <div class="movie-tag">
+
+                                🤖 AI Assistant
+
+                            </div>
+
+
+                        </div>
+
+
+                        <p class="movie-description">
+
+                            {{ movie.overview|default(
+                                "Explore important concepts, ideas, lessons and real-world knowledge through this movie."
+                            ) }}
+
+                        </p>
+
+                    {% else %}
+
+                        <div class="movie-tags">
+
+                            <div class="movie-tag">
+                                🎓 Learning
+                            </div>
+
+                            <div class="movie-tag">
+                                🤖 AI Assistant
+                            </div>
+
+                            <div class="movie-tag">
+                                📚 Education
+                            </div>
+
+                        </div>
+
+
+                        <p class="movie-description">
+
+                            Explore important concepts, ideas,
+                            lessons and real-world knowledge
+                            through movies.
+
+                        </p>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 LEARNING SUMMARY
+            ================================================= -->
+
+            <div class="content-card">
+
+
+                <div class="content-title">
+
+                    <span class="icon">
+                        📄
+                    </span>
+
+                    Learning Summary
+
+                </div>
+
+
+                {% if answer %}
+
+                    <div class="answer-box">
+
+                        <div class="answer-title">
+
+                            🎓 Learning Information
+
+                        </div>
+
+
+                        <div class="answer-text">
+
+                            {{ answer }}
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        🎬 Enter a movie name and choose
+                        a learning topic.
+
+                        <br><br>
+
+                        The AI Learning Assistant will
+                        generate useful educational information
+                        about the selected movie.
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if error %}
+
+                    <div class="error-box">
+
+                        ⚠️ {{ error }}
+
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 KEY LEARNINGS
+            ================================================= -->
+
+            <div class="content-card">
+
+
+                <div class="content-title">
+
+                    <span class="icon">
+                        🎓
+                    </span>
+
+                    Key Learnings
+
+                </div>
+
+
+                <div class="learning-grid">
+
+
+                    <div class="learning-item">
+
+                        <strong>
+                            🧠 Critical Thinking
+                        </strong>
+
+                        Understand ideas,
+                        decisions and problems
+                        presented in the movie.
+
+                    </div>
+
+
+                    <div class="learning-item">
+
+                        <strong>
+                            🔬 Knowledge
+                        </strong>
+
+                        Connect movie concepts
+                        with academic subjects.
+
+                    </div>
+
+
+                    <div class="learning-item">
+
+                        <strong>
+                            💡 Problem Solving
+                        </strong>
+
+                        Learn how characters
+                        approach difficult situations.
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 REAL WORLD APPLICATION
+            ================================================= -->
+
+            <div class="content-card">
+
+
+                <div class="content-title">
+
+                    <span class="icon">
+                        🌐
+                    </span>
+
+                    Real World Application
+
+                </div>
+
+
+                <div class="real-world">
+
+                    {% if answer %}
+
+                        Students can connect the selected
+                        movie's concepts with real-world
+                        situations, academic subjects,
+                        critical thinking and problem solving.
+
+                    {% else %}
+
+                        Select a movie and learning topic
+                        to explore real-world applications.
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ====================================================
+             RIGHT PANEL
+        ==================================================== -->
+
+        <aside class="right-panel">
+
+
+            <!-- KEY TAKEAWAYS -->
+
+            <div class="right-card">
+
+                <div class="right-title">
+
+                    💡 Key Takeaways
+
+                </div>
+
+
+                <div class="takeaway">
+
+                    <span class="takeaway-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Movies can be used as an
+                        educational learning resource.
+                    </span>
+
+                </div>
+
+
+                <div class="takeaway">
+
+                    <span class="takeaway-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Students can identify
+                        scientific and technical concepts.
+                    </span>
+
+                </div>
+
+
+                <div class="takeaway">
+
+                    <span class="takeaway-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Characters can provide
+                        useful life and teamwork lessons.
+                    </span>
+
+                </div>
+
+
+                <div class="takeaway">
+
+                    <span class="takeaway-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Movie situations can be
+                        connected with real life.
+                    </span>
+
+                </div>
+
+
+                <div class="takeaway">
+
+                    <span class="takeaway-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Critical thinking helps students
+                        understand movie ideas deeply.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EXPLORE MORE -->
+
+            <div class="right-card">
+
+                <div class="right-title">
+
+                    📚 Explore More
+
+                </div>
+
+
+                <div class="explore-item">
+
+                    <div class="explore-icon">
+                        📖
+                    </div>
+
+                    <div class="explore-text">
+
+                        Learn scientific concepts
+                        related to movies.
+
+                    </div>
+
+                </div>
+
+
+                <div class="explore-item">
+
+                    <div class="explore-icon">
+                        🔬
+                    </div>
+
+                    <div class="explore-text">
+
+                        Explore science and
+                        technology behind stories.
+
+                    </div>
+
+                </div>
+
+
+                <div class="explore-item">
+
+                    <div class="explore-icon">
+                        🧠
+                    </div>
+
+                    <div class="explore-text">
+
+                        Improve critical thinking
+                        through movie analysis.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ASK AI -->
+
+            <div class="right-card ask-card">
+
+                <div class="right-title">
+
+                    🤖 Ask AI Assistant
+
+                </div>
+
+
+                <p>
+
+                    Ask any question about the
+                    selected movie or learning topic.
+
+                </p>
+
+
+                <form
+                    method="POST"
+                    action="/ai-assistant"
+                    class="ask-form"
+                >
+
+
+                    <input
+                        type="hidden"
+                        name="movie_name"
+                        value="{{ movie_name|default('') }}"
+                    >
+
+
+                    <textarea
+                        name="question"
+                        placeholder="Type your question..."
+                        required
+                    ></textarea>
+
+
+                    <button type="submit">
+                        Ask
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+</main>
+
+
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+
+<footer>
+
+    Movie Recommendation System © 2026
+
+</footer>
+
+
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   GET ELEMENTS
+============================================================ */
+
+const topicButtons =
+    document.querySelectorAll(".topic-btn");
+
+const questionInput =
+    document.getElementById("question");
+
+const movieInput =
+    document.getElementById("movie_name");
+
+const assistantForm =
+    document.getElementById("assistantForm");
+
+
+/* ============================================================
+   TOPIC BUTTON CLICK
+============================================================ */
+
+topicButtons.forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+
+        /* ---------------------------------------------
+           Check movie name
+        --------------------------------------------- */
+
+        if (movieInput.value.trim() === "") {
+
+            alert(
+                "Please enter a movie name first."
+            );
+
+            movieInput.focus();
+
+            return;
+        }
+
+
+        /* ---------------------------------------------
+           Remove active class
+        --------------------------------------------- */
+
+        topicButtons.forEach(function(btn) {
+
+            btn.classList.remove("active");
+
+        });
+
+
+        /* ---------------------------------------------
+           Add active class
+        --------------------------------------------- */
+
+        button.classList.add("active");
+
+
+        /* ---------------------------------------------
+           Get selected topic question
+        --------------------------------------------- */
+
+        const selectedQuestion =
+            button.getAttribute("data-question");
+
+
+        /* ---------------------------------------------
+           Put question into hidden textarea
+        --------------------------------------------- */
+
+        questionInput.value =
+            selectedQuestion;
+
+
+        /* ---------------------------------------------
+           SUBMIT FORM AUTOMATICALLY
+           
+           This is the important fix.
+        --------------------------------------------- */
+
+        assistantForm.submit();
+
+    });
+
+});
+
+
+/* ============================================================
+   SET ACTIVE TOPIC AFTER PAGE LOAD
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const currentQuestion =
+            questionInput.value.trim();
+
+        let foundTopic = false;
+
+
+        topicButtons.forEach(function(button) {
+
+            const buttonQuestion =
+                button.getAttribute("data-question");
+
+
+            if (
+                buttonQuestion === currentQuestion
+            ) {
+
+                button.classList.add("active");
+
+                foundTopic = true;
+
+            }
+
+        });
+
+
+        /* ---------------------------------------------
+           Do NOT automatically submit here.
+           Only highlight the selected topic.
+        --------------------------------------------- */
+
+        if (
+            !foundTopic &&
+            topicButtons.length > 0
+        ) {
+
+            topicButtons[0].classList.add("active");
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   FORM VALIDATION
+============================================================ */
+
+assistantForm.addEventListener(
+    "submit",
+    function(event) {
+
+        const movie =
+            movieInput.value.trim();
+
+        const question =
+            questionInput.value.trim();
+
+
+        /* ---------------------------------------------
+           Movie validation
+        --------------------------------------------- */
+
+        if (movie === "") {
+
+            event.preventDefault();
+
+            alert(
+                "Please enter a movie name."
+            );
+
+            movieInput.focus();
+
+            return;
+        }
+
+
+        /* ---------------------------------------------
+           Topic validation
+        --------------------------------------------- */
+
+        if (question === "") {
+
+            event.preventDefault();
+
+            alert(
+                "Please select a learning topic."
+            );
+
+            return;
+        }
+
+    }
+);
+
+
+/* ============================================================
+   ASK AI FORM
+============================================================ */
+
+const askForm =
+    document.querySelector(".ask-form");
+
+if (askForm) {
+
+    askForm.addEventListener(
+        "submit",
+        function(event) {
+
+            const askMovie =
+                askForm.querySelector(
+                    'input[name="movie_name"]'
+                );
+
+            const askQuestion =
+                askForm.querySelector(
+                    'textarea[name="question"]'
+                );
+
+
+            /*
+               If movie is empty, use the movie
+               currently entered in the left panel.
+            */
+
+            if (
+                askMovie &&
+                movieInput &&
+                movieInput.value.trim() !== ""
+            ) {
+
+                askMovie.value =
+                    movieInput.value.trim();
+
+            }
+
+
+            if (
+                !askQuestion ||
+                askQuestion.value.trim() === ""
+            ) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please enter your question."
+                );
+
+                return;
+            }
+
+
+            /*
+               If Ask AI has a question,
+               allow normal POST.
+            */
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

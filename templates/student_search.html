@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie Search | Student Mode</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #020814;
+            color: #ffffff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            height: 66px;
+            background: #050b18;
+            border-bottom: 1px solid #17243a;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 24px;
+        }
+
+        .logo {
+            width: 250px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .logo-title span {
+            color: #9b52ff;
+        }
+
+        .nav-links {
+            flex: 1;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: #d5d9e2;
+            font-size: 14px;
+            padding: 24px 0;
+        }
+
+        .nav-links a:hover,
+        .active-nav {
+            color: #9b52ff !important;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-user {
+            color: #d5d9e2;
+            font-size: 13px;
+        }
+
+        .nav-btn {
+            padding: 9px 17px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .login-btn,
+        .profile-btn {
+            background: #7949e8;
+            color: white;
+        }
+
+        .register-btn {
+            color: white;
+            border: 1px solid #7949e8;
+        }
+
+        .logout-btn {
+            color: #ff9aa8;
+            border: 1px solid #71303d;
+        }
+
+        /* PAGE */
+        .page {
+            max-width: 1150px;
+            margin: auto;
+            padding: 30px 20px 70px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #a96cff;
+            font-size: 12px;
+            margin-bottom: 22px;
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #8491a7;
+            font-size: 12px;
+        }
+
+        /* SEARCH */
+        .search-card {
+            background: linear-gradient(
+                145deg,
+                #071120,
+                #09162a
+            );
+
+            border: 1px solid #1b2b40;
+            border-radius: 10px;
+
+            padding: 20px;
+            margin-bottom: 22px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+
+            height: 44px;
+
+            padding: 0 14px;
+
+            border-radius: 7px;
+
+            border: 1px solid #263650;
+
+            background: #050d1a;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 12px;
+        }
+
+        .search-input:focus {
+            border-color: #8952ed;
+        }
+
+        .search-button {
+            height: 44px;
+
+            padding: 0 20px;
+
+            border: none;
+            border-radius: 7px;
+
+            background: linear-gradient(
+                135deg,
+                #7547d9,
+                #9b52ff
+            );
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        /* RESULTS */
+        .results-title {
+            font-size: 17px;
+            margin-bottom: 13px;
+        }
+
+        .results-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 14px;
+        }
+
+        .movie-result {
+            display: flex;
+
+            gap: 15px;
+
+            padding: 14px;
+
+            background: linear-gradient(
+                145deg,
+                #071120,
+                #09162a
+            );
+
+            border: 1px solid #1b2b40;
+
+            border-radius: 10px;
+
+            transition: 0.2s;
+        }
+
+        .movie-result:hover {
+            border-color: #8952ed;
+            transform: translateY(-2px);
+        }
+
+        .poster {
+            width: 85px;
+            height: 120px;
+
+            flex-shrink: 0;
+
+            object-fit: cover;
+
+            border-radius: 6px;
+
+            background: #050d1a;
+        }
+
+        .movie-info {
+            display: flex;
+            flex-direction: column;
+
+            min-width: 0;
+        }
+
+        .movie-info h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            color: #aeb8c9;
+            font-size: 10px;
+            margin-bottom: 6px;
+        }
+
+        .rating {
+            color: #ffd45c;
+        }
+
+        .genres {
+            color: #77879d;
+            font-size: 9px;
+            line-height: 1.5;
+
+            margin-bottom: 12px;
+        }
+
+        .learn-button {
+            margin-top: auto;
+
+            display: inline-block;
+
+            width: fit-content;
+
+            padding: 8px 12px;
+
+            border-radius: 6px;
+
+            background: linear-gradient(
+                135deg,
+                #7547d9,
+                #9b52ff
+            );
+
+            color: white;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .learn-button:hover {
+            opacity: 0.9;
+        }
+
+        .no-results {
+            padding: 25px;
+
+            text-align: center;
+
+            background: #071120;
+
+            border: 1px solid #1b2b40;
+
+            border-radius: 10px;
+
+            color: #9eabbe;
+
+            font-size: 12px;
+        }
+
+        footer {
+            text-align: center;
+            color: #58667a;
+            font-size: 10px;
+            padding: 20px;
+        }
+
+        @media(max-width: 800px) {
+            .nav-links {
+                display: none;
+            }
+
+            .logo {
+                width: auto;
+                flex: 1;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 550px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+
+            .movie-result {
+                flex-direction: column;
+            }
+
+            .poster {
+                width: 100%;
+                height: 230px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="MovieRecommender"
+            >
+        </div>
+
+        <div class="logo-title">
+            Movie<span>Recommender</span>
+        </div>
+
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/movies">Movies</a>
+
+        <a href="/ai-assistant">AI Assistant</a>
+
+        <a href="/student-mode" class="active-nav">
+            Student Mode
+        </a>
+
+        <a href="/discussion">Discussion</a>
+
+    </div>
+
+    <div class="nav-right">
+
+        {% if user_logged_in %}
+
+            <span class="welcome-user">
+                Hi, {{ user_name }}
+            </span>
+
+            <a href="/profile" class="nav-btn profile-btn">
+                Profile
+            </a>
+
+            <a href="/logout" class="nav-btn logout-btn">
+                Logout
+            </a>
+
+        {% else %}
+
+            <a href="/login" class="nav-btn login-btn">
+                Login
+            </a>
+
+            <a href="/register" class="nav-btn register-btn">
+                Register
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<main class="page">
+
+    <a href="/student-mode" class="back-link">
+        ← Back to Student Mode
+    </a>
+
+
+    <div class="page-title">
+
+        <h1>
+            🔎 Find a Movie to Learn From
+        </h1>
+
+        <p>
+            Search your movie dataset and start an educational learning module.
+        </p>
+
+    </div>
+
+
+    <div class="search-card">
+
+        <form
+            method="GET"
+            action="/student-mode/search"
+            class="search-form"
+        >
+
+            <input
+                type="text"
+                name="query"
+                class="search-input"
+                value="{{ query|default('') }}"
+                placeholder="Search movie name..."
+                autocomplete="off"
+                required
+            >
+
+            <button
+                type="submit"
+                class="search-button"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if results %}
+
+        <h2 class="results-title">
+            Search Results
+        </h2>
+
+        <div class="results-grid">
+
+            {% for movie in results %}
+
+                <div class="movie-result">
+
+                    {% if movie.poster_url %}
+
+                        <img
+                            src="{{ movie.poster_url }}"
+                            alt="{{ movie.title }}"
+                            class="poster"
+                        >
+
+                    {% else %}
+
+                        <div class="poster">
+                            🎬
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="movie-info">
+
+                        <h3>
+                            {{ movie.title }}
+                        </h3>
+
+                        {% if movie.rating %}
+                            <div class="meta rating">
+                                ⭐ {{ movie.rating }}
+                            </div>
+                        {% endif %}
+
+                        {% if movie.year %}
+                            <div class="meta">
+                                📅 {{ movie.year }}
+                            </div>
+                        {% endif %}
+
+                        {% if movie.genres %}
+                            <div class="genres">
+                                🎭 {{ movie.genres }}
+                            </div>
+                        {% endif %}
+
+
+                        <a
+                            href="/student-topic?movie={{ movie.title|urlencode }}&topic=movie-analysis"
+                            class="learn-button"
+                        >
+                            📚 Start Learning →
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% elif query %}
+
+        <div class="no-results">
+            ❌ No movies found for "{{ query }}".
+            <br><br>
+            Try another movie name.
+        </div>
+
+    {% endif %}
+
+</main>
+
+
+<footer>
+    Movie Recommendation System © 2026
+</footer>
+
+
+</body>
+</html>

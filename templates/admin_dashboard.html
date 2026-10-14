@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Dashboard - MovieRecommender</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #20242c;
+            min-height: 100vh;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 235px;
+
+            background: #ffffff;
+
+            border-right: 1px solid #e5e8ef;
+
+            padding: 22px 15px;
+
+            z-index: 100;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 0 10px 25px;
+
+            border-bottom: 1px solid #edf0f5;
+        }
+
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 9px;
+
+            background: #7057d9;
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+        }
+
+
+        .brand h2 {
+            font-size: 15px;
+            color: #272b34;
+        }
+
+
+        .brand h2 span {
+            color: #7057d9;
+        }
+
+
+        .brand p {
+            margin-top: 3px;
+            color: #9aa1ad;
+            font-size: 8px;
+        }
+
+
+        .menu-title {
+            margin: 27px 10px 10px;
+
+            color: #a0a6b1;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            font-weight: bold;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        .menu a {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 11px 12px;
+
+            margin-bottom: 4px;
+
+            border-radius: 7px;
+
+            color: #606773;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover {
+            background: #f2efff;
+            color: #7057d9;
+        }
+
+
+        .menu a.active {
+            background: #eeeaff;
+            color: #7057d9;
+
+            font-weight: 600;
+        }
+
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 235px;
+            min-height: 100vh;
+        }
+
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            height: 70px;
+
+            background: white;
+
+            border-bottom: 1px solid #e5e8ef;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+        }
+
+
+        .topbar h1 {
+            font-size: 20px;
+        }
+
+
+        .topbar p {
+            color: #8c939f;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+
+            border-radius: 50%;
+
+            background: #7057d9;
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+
+        .admin-name {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+
+        .admin-role {
+            color: #9299a5;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 28px 30px;
+        }
+
+
+        /* ================= STATISTICS ================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .stat-card {
+            background: white;
+
+            border: 1px solid #e5e8ef;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .stat-info p {
+            color: #858c98;
+            font-size: 11px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .stat-info h2 {
+            font-size: 25px;
+        }
+
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 9px;
+
+            background: #eeeaff;
+
+            color: #7057d9;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+        }
+
+
+        /* ================= SECTION ================= */
+
+        .section-card {
+            background: white;
+
+            border: 1px solid #e5e8ef;
+
+            border-radius: 10px;
+
+            margin-bottom: 25px;
+
+            overflow: hidden;
+        }
+
+
+        .section-header {
+            padding: 18px 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            border-bottom: 1px solid #edf0f5;
+        }
+
+
+        .section-header h2 {
+            font-size: 15px;
+        }
+
+
+        .section-header p {
+            color: #969daa;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+
+        .add-btn {
+            border: none;
+
+            background: #7057d9;
+
+            color: white;
+
+            padding: 9px 15px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            cursor: pointer;
+        }
+
+
+        .add-btn:hover {
+            background: #6048c5;
+        }
+
+
+        /* ================= TABLE ================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+
+        th {
+            text-align: left;
+
+            padding: 13px 20px;
+
+            background: #fafbfc;
+
+            color: #8a919d;
+
+            font-size: 10px;
+
+            font-weight: 600;
+        }
+
+
+        td {
+            padding: 14px 20px;
+
+            border-top: 1px solid #f0f2f5;
+
+            font-size: 11px;
+
+            color: #4e5560;
+        }
+
+
+        .movie-cell {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+
+        .movie-poster {
+            width: 38px;
+            height: 48px;
+
+            border-radius: 4px;
+
+            overflow: hidden;
+
+            background: #e8eaf0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+        }
+
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+
+        .movie-title {
+            font-weight: 600;
+            color: #30353e;
+        }
+
+
+        .movie-genre {
+            color: #969daa;
+            font-size: 9px;
+            margin-top: 4px;
+        }
+
+
+        .rating {
+            color: #7057d9;
+            font-weight: 600;
+        }
+
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #e9f8ef;
+
+            color: #2e9b5b;
+
+            font-size: 9px;
+        }
+
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+
+        .action-btn {
+            border: none;
+
+            width: 28px;
+            height: 28px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            background: #f1efff;
+
+            color: #7057d9;
+        }
+
+
+        .action-btn.delete {
+            background: #fff0f0;
+            color: #df5a5a;
+        }
+
+
+        /* ================= QUICK ACTIONS ================= */
+
+        .quick-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            padding: 20px;
+        }
+
+
+        .quick-card {
+            border: 1px solid #e5e8ef;
+
+            border-radius: 8px;
+
+            padding: 18px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .quick-card:hover {
+            border-color: #7057d9;
+            transform: translateY(-2px);
+        }
+
+
+        .quick-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+
+        .quick-card h3 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+
+        .quick-card p {
+            color: #9299a5;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+
+        /* ================= LOGOUT ================= */
+
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 15px;
+            right: 15px;
+        }
+
+
+        .logout a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 11px 12px;
+
+            border-radius: 7px;
+
+            color: #df5a5a;
+
+            text-decoration: none;
+
+            font-size: 12px;
+        }
+
+
+        .logout a:hover {
+            background: #fff0f0;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 1100px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+            }
+
+        }
+
+
+        @media(max-width: 750px) {
+
+            .sidebar {
+                width: 65px;
+                padding: 15px 8px;
+            }
+
+            .brand-text,
+            .menu-title,
+            .menu a span,
+            .logout span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+                padding: 0 0 20px;
+            }
+
+            .menu a {
+                justify-content: center;
+                padding: 12px 5px;
+            }
+
+            .logout a {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 65px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .admin-name,
+            .admin-role {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🎬
+            </div>
+
+            <div class="brand-text">
+
+                <h2>
+                    Movie<span>Recommender</span>
+                </h2>
+
+                <p>
+                    ADMIN PANEL
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="menu-title">
+            Main Menu
+        </div>
+
+
+        <div class="menu">
+
+            <!-- DASHBOARD -->
+
+            <a
+                href="/admin/dashboard"
+                class="active"
+            >
+
+                <div class="menu-icon">
+                    📊
+                </div>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- MOVIES -->
+
+            <a href="/admin/movies">
+
+                <div class="menu-icon">
+                    🎬
+                </div>
+
+                <span>
+                    Movies
+                </span>
+
+            </a>
+
+
+            <!-- USERS -->
+
+            <a href="{{ url_for('admin_users') }}">
+
+                <div class="menu-icon">
+                    👥
+                </div>
+
+                <span>
+                    Users
+                </span>
+
+            </a>
+
+
+            <!-- RATINGS -->
+
+            <a href="{{ url_for('admin_ratings') }}">
+
+                <div class="menu-icon">
+                    ⭐
+                </div>
+
+                <span>
+                    Ratings
+                </span>
+
+            </a>
+
+
+            <!-- DISCUSSIONS -->
+
+            <a href="{{ url_for('admin_discussions') }}">
+
+                <div class="menu-icon">
+                    💬
+                </div>
+
+                <span>
+                    Discussions
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <div class="menu-title">
+            Management
+        </div>
+
+
+        <div class="menu">
+
+
+            <!-- DATASETS -->
+
+            <a href="{{ url_for('admin_datasets') }}">
+
+                <div class="menu-icon">
+                    🗂️
+                </div>
+
+                <span>
+                    Datasets
+                </span>
+
+            </a>
+
+
+            <!-- AI FEATURES -->
+
+            <a href="#">
+
+                <div class="menu-icon">
+                    🤖
+                </div>
+
+                <span>
+                    AI Features
+                </span>
+
+            </a>
+
+
+
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <div class="logout">
+
+            <a href="/admin/logout">
+
+                <div class="menu-icon">
+                    🚪
+                </div>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+    <div class="main">
+
+
+        <!-- =================================================
+             TOPBAR
+        ================================================= -->
+
+        <header class="topbar">
+
+
+            <div>
+
+                <h1>
+                    Dashboard Overview
+                </h1>
+
+                <p>
+                    Welcome back, Admin. Here's what's happening today.
+                </p>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+
+                <div>
+
+                    <div class="admin-name">
+                        Admin
+                    </div>
+
+                    <div class="admin-role">
+                        Administrator
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================= -->
+
+        <main class="content">
+
+
+            <!-- =================================================
+                 STATISTICS
+            ================================================= -->
+
+            <section class="stats">
+
+
+                <!-- TOTAL MOVIES -->
+
+                <div class="stat-card">
+
+                    <div class="stat-info">
+
+                        <p>
+                            Total Movies
+                        </p>
+
+                        <h2>
+                            {{ total_movies|default(4806) }}
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        🎬
+                    </div>
+
+                </div>
+
+
+                <!-- TOTAL USERS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-info">
+
+                        <p>
+                            Total Users
+                        </p>
+
+                        <h2>
+                            {{ total_users|default(0) }}
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                </div>
+
+
+                <!-- TOTAL RATINGS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-info">
+
+                        <p>
+                            Total Ratings
+                        </p>
+
+                        <h2>
+                            {{ total_ratings|default(0) }}
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        ⭐
+                    </div>
+
+                </div>
+
+
+                <!-- DISCUSSIONS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-info">
+
+                        <p>
+                            Discussions
+                        </p>
+
+                        <h2>
+                            {{ total_discussions|default(0) }}
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        💬
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RECENT MOVIES
+            ================================================= -->
+
+            <section class="section-card">
+
+
+                <div class="section-header">
+
+
+                    <div>
+
+                        <h2>
+                            Recent Movies Added
+                        </h2>
+
+                        <p>
+                            Manage movies available in the recommendation system.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="add-btn"
+                        onclick="window.location.href='/admin/movies'"
+                    >
+
+                        + Add New Movie
+
+                    </button>
+
+
+                </div>
+
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                MOVIE
+                            </th>
+
+                            <th>
+                                GENRE
+                            </th>
+
+                            <th>
+                                RATING
+                            </th>
+
+                            <th>
+                                STATUS
+                            </th>
+
+                            <th>
+                                ACTIONS
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% if recent_movies %}
+
+
+                            {% for movie in recent_movies %}
+
+
+                            <tr>
+
+
+                                <td>
+
+
+                                    <div class="movie-cell">
+
+
+                                        <div class="movie-poster">
+
+
+                                            {% if movie.poster_url %}
+
+                                                <img
+                                                    src="{{ movie.poster_url }}"
+                                                    alt="{{ movie.title }}"
+                                                >
+
+                                            {% else %}
+
+                                                🎬
+
+                                            {% endif %}
+
+
+                                        </div>
+
+
+                                        <div>
+
+
+                                            <div class="movie-title">
+
+                                                {{ movie.title }}
+
+                                            </div>
+
+
+                                            <div class="movie-genre">
+
+                                                Movie
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ movie.genres|default("Movie") }}
+
+                                </td>
+
+
+                                <td class="rating">
+
+                                    {{ movie.rating|default("N/A") }}
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="status">
+
+                                        Active
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+
+                                    <div class="actions">
+
+
+                                        <button
+                                            class="action-btn"
+                                            title="Edit Movie"
+                                            onclick="window.location.href='/admin/movies'"
+                                        >
+
+                                            ✏️
+
+                                        </button>
+
+
+                                        <button
+                                            class="action-btn delete"
+                                            title="Delete Movie"
+                                        >
+
+                                            🗑️
+
+                                        </button>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+
+                            <tr>
+
+                                <td colspan="5">
+
+                                    No recent movies available.
+
+                                </td>
+
+                            </tr>
+
+
+                        {% endif %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================= -->
+
+            <section class="section-card">
+
+
+                <div class="section-header">
+
+
+                    <div>
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                        <p>
+                            Frequently used administration tools.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="quick-grid">
+
+
+                    <!-- MANAGE MOVIES -->
+
+                    <div
+                        class="quick-card"
+                        onclick="window.location.href='/admin/movies'"
+                    >
+
+
+                        <div class="quick-icon">
+                            🎬
+                        </div>
+
+
+                        <h3>
+                            Manage Movies
+                        </h3>
+
+
+                        <p>
+                            Add, edit and manage movies in the dataset.
+                        </p>
+
+
+                    </div>
+
+
+
+                    <!-- DATASET -->
+
+                    <div
+                        class="quick-card"
+                        onclick="window.location.href='#'"
+                    >
+
+
+                        <div class="quick-icon">
+                            🗂️
+                        </div>
+
+
+                        <h3>
+                            Manage Dataset
+                        </h3>
+
+
+                        <p>
+                            View and manage movie dataset information.
+                        </p>
+
+
+                    </div>
+
+
+
+                    <!-- AI -->
+
+                    <div
+                        class="quick-card"
+                        onclick="window.location.href='#'"
+                    >
+
+
+                        <div class="quick-icon">
+                            🤖
+                        </div>
+
+
+                        <h3>
+                            AI Recommendation
+                        </h3>
+
+
+                        <p>
+                            Monitor recommendation engine and similarity model.
+                        </p>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+    </div>
+
+
+</body>
+
+</html>
